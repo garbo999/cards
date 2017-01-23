@@ -1,8 +1,10 @@
 class Hand
-  def initialize(n=1)
+  def initialize(*cards)
     @hand = Array.new
+=begin
     n.times do
-      
+
     end
+=end
   end
 end

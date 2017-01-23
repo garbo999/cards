@@ -84,8 +84,8 @@ RSpec.describe CardDeck do
     it 'deals pairs in a 2-card hand at a ratio of approx. 1/17' do
 
       cnt = 0
-      X = 1000000
-      X.times do |i|
+      X = 100000
+      X.times do |i| # generate 100,000 random 2-card hands
         begin
           h = @cd.deal(2)
         rescue NotEnoughCardsError
@@ -102,7 +102,7 @@ RSpec.describe CardDeck do
       percent_diff = (seventeen - ratio).abs / seventeen * 100
       puts "percent_diff=#{percent_diff}"
       max_percentage = 1 # tolerate max 1% difference
-      
+
       expect(percent_diff).to be < (max_percentage)
 
     end
