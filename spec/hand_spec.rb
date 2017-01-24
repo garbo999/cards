@@ -8,7 +8,7 @@ RSpec.describe Hand do
 
   context 'basic Hand stuff' do
 
-    it 'instantiates a hand' do
+    xit 'instantiates a hand' do
       expect(@h).to be
     end
 

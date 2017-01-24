@@ -4,9 +4,16 @@
 The idea here is to develop a hand analyzer using Ruby and RSpec. The emphasis is on the test spec created with RSpec.
 
 ## Goal
-I am writing a Ruby program that will allow me to create a hand analyzer like this:
+I am writing a Ruby program that will allow me to analyze the odds of specific hands like this:
 
 ```ruby
+game = 'Texas Holdem'
+cd = CardDeck.new
+hand1 = CardDeck.deal_selected(Card.new('10', 'Clubs'), Card.new('10', 'Diamonds'))
+hand2 = CardDeck.deal_selected(Card.new('3', 'Spades'), Card.new('3', 'Hearts'))
+board = []
+HandAnalyzer.show_odds(game, board, hand1, hand2) # hand1 => 80%, hand2 => 20%
+
 hand1 = Hand.new(Card.new('10', 'Clubs'), Card.new('10', 'Diamonds'))
 hand2 = Hand.new(Card.new('3', 'Spades'), Card.new('3', 'Hearts'))
 game = 'Texas Holdem'
