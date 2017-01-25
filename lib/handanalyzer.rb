@@ -9,22 +9,15 @@ class HandAnalyzer
   # 2 pair
   # 1 pair
   # High card
-  
+
   def self.is_pair?(board, hand)
-    #cards = board.cards + hand.cards
-    cards = hand.cards
-    #cards.sort
-    #cards_with_rank_only = cards.map {|c| c.rank}
+    cards = board.cards + hand.cards
     h = Hash.new
     cards.each do |c| 
-      if h[c.rank]
-        h[c.rank] += 1
-      else
-        h[c.rank] = 1
-      end
+      h[c.rank] ? h[c.rank] += 1 : h[c.rank] = 1
     end
 
-    h.each {|k,v| if v == 2 ; return true ; end}
+    h.each {|k,v| return true if v == 2}
     return false
   end
 
