@@ -16,6 +16,8 @@ board = Board.new(0) # preflop
 HandAnalyzer.show_odds(game, board, hand1, hand2) # hand1 => 80%, hand2 => 20%
 ```
 
+The code above creates two hands (a pair of 10s vs. a lower pair of 3s). These odds are important to know in Texas Holdem. I want to calculate them either using a full simulation if possible, or just a random simulation of some portion of the possible cards, if the 1st possibility is too time-consuming.
+
 Example 2:
 ```ruby
 game = 'Texas Holdem'
@@ -26,7 +28,7 @@ board = Board.new(4) # after the turn = 4 cards on board
 HandAnalyzer.show_odds(game, board, hand1, hand2) # hand1 => 80%, hand2 => 20%
 ```
 
-The code above creates two hands (a pair of 10s vs. a lower pair of 3s). These odds are important to know in Texas Holdem. I want to calculate them either using a full simulation if possible, or just a random simulation of some portion of the possible cards, if the 1st possibility is too time-consuming.
+In the second example, there are already four cards on the board and one more card will be dealt.
 
 ## Development process
 I am using test-driven development (TDD). I move forward by writing individual tests to incrementally reach the goal described above.

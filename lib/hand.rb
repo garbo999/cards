@@ -1,10 +1,8 @@
 class Hand
-  def initialize(*cards)
-    @hand = Array.new
-=begin
-    n.times do
+  attr_accessor :cards
 
-    end
-=end
+  def initialize(cards)
+    @cards = cards
   end
+
 end
