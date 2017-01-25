@@ -51,7 +51,14 @@ class CardDeck
     end
   end
 
-  def deal_specific(*cards)
+  def deal_specific(*card)
+    card.each do |ccc|
+      @deck_of_cards.delete_if{|c| c.suit == ccc.suit and c.rank == ccc.rank}
+    end
+  end
+
+  def find_card(card)
+    @deck_of_cards.detect{|c| c.suit == card.suit and c.rank == card.rank }
   end
 
 end

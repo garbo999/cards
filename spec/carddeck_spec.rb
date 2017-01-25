@@ -86,7 +86,17 @@ RSpec.describe CardDeck do
     end
 
     it 'deals the King of Clubs when so asked' do
-      expect(@cd.deal_specific(["K", "Hearts"]))
+      specific_card = Card.new("K", "Hearts")
+      @cd.deal_specific(specific_card)
+      expect(@cd.count_cards).to eql(51)
+      expect(@cd.find_card(specific_card)).to equal(nil)
+    end
+
+    it 'can deal a pair of 10s' do
+      sc1 = Card.new("10", "Hearts")
+      sc2 = Card.new("10", "Spades")
+      @cd.deal_specific(sc1, sc2)
+      expect(@cd.count_cards).to eql(50)
     end
   end
 
@@ -95,7 +105,7 @@ RSpec.describe CardDeck do
 
       cnt = 0
       X = 1000000
-      X.times do |i| # generate 100,000 random 2-card hands
+      X.times do |i| # generate 1000000 random 2-card hands
         begin
           h = @cd.deal(2)
         rescue NotEnoughCardsError

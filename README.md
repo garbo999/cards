@@ -13,11 +13,6 @@ hand1 = CardDeck.deal_selected(Card.new('10', 'Clubs'), Card.new('10', 'Diamonds
 hand2 = CardDeck.deal_selected(Card.new('3', 'Spades'), Card.new('3', 'Hearts'))
 board = [] # preflop
 HandAnalyzer.show_odds(game, board, hand1, hand2) # hand1 => 80%, hand2 => 20%
-
-hand1 = Hand.new(Card.new('10', 'Clubs'), Card.new('10', 'Diamonds'))
-hand2 = Hand.new(Card.new('3', 'Spades'), Card.new('3', 'Hearts'))
-game = 'Texas Holdem'
-HandAnalyzer.show_odds(game, hand1, hand2) # hand1 => 80%, hand2 => 20%
 ```
 
 The code above creates two hands (a pair of 10s vs. a lower pair of 3s). These odds are important to know in Texas Holdem. I want to calculate them either using a full simulation if possible, or just a random simulation of some portion of the possible cards, if the 1st possibility is too time-consuming.
