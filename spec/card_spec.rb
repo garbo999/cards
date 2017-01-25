@@ -21,6 +21,11 @@ RSpec.describe Card do
       }.to raise_error(ArgumentError)
     end
 
+    it 'can output a card as an array' do
+      @c = Card.new('A', 'Spades')
+      expect(@c.to_ary).to eql(['A', 'Spades'])
+    end
+
   end
 
 end

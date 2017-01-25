@@ -80,11 +80,21 @@ RSpec.describe CardDeck do
     end
   end
 
+  context 'dealing specific cards' do
+    it 'responds to the :deal_specific method' do
+      expect(@cd).to respond_to (:deal_specific)
+    end
+
+    it 'deals the King of Clubs when so asked' do
+      expect(@cd.deal_specific(["K", "Hearts"]))
+    end
+  end
+
   context 'statistics' do
     it 'deals pairs in a 2-card hand at a ratio of approx. 1/17' do
 
       cnt = 0
-      X = 100000
+      X = 1000000
       X.times do |i| # generate 100,000 random 2-card hands
         begin
           h = @cd.deal(2)

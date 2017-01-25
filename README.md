@@ -11,7 +11,7 @@ game = 'Texas Holdem'
 cd = CardDeck.new
 hand1 = CardDeck.deal_selected(Card.new('10', 'Clubs'), Card.new('10', 'Diamonds'))
 hand2 = CardDeck.deal_selected(Card.new('3', 'Spades'), Card.new('3', 'Hearts'))
-board = []
+board = [] # preflop
 HandAnalyzer.show_odds(game, board, hand1, hand2) # hand1 => 80%, hand2 => 20%
 
 hand1 = Hand.new(Card.new('10', 'Clubs'), Card.new('10', 'Diamonds'))
@@ -24,3 +24,6 @@ The code above creates two hands (a pair of 10s vs. a lower pair of 3s). These o
 
 ## Development process
 I am using test-driven development (TDD). I move forward by writing individual tests to incrementally reach the goal described above.
+
+## TO DO
+- Attempt to analyze and quantify how long streaks of luck can occur in Texas Holdem

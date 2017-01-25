@@ -51,4 +51,7 @@ class CardDeck
     end
   end
 
+  def deal_specific(*cards)
+  end
+
 end

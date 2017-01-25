@@ -13,4 +13,7 @@ class Card
     end
   end
   
+  def to_ary
+    [@rank, @suit]
+  end
 end
