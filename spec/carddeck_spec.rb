@@ -98,10 +98,20 @@ RSpec.describe CardDeck do
       @cd.deal_specific(sc1, sc2)
       expect(@cd.count_cards).to eql(50)
     end
+
+    it 'can deal 5 board cards and two specific pairs' do 
+      sc1 = Card.new("10", "Hearts")
+      sc2 = Card.new("10", "Spades")
+      sc3 = Card.new("A", "Clubs")
+      sc4 = Card.new("A", "Diamonds")
+      board_cards = @cd.deal(5)
+      @cd.deal_specific(sc1, sc2, sc3, sc4)
+      expect(@cd.count_cards).to eql(43)
+    end
   end
 
   context 'statistics' do
-    it 'deals pairs in a 2-card hand at a ratio of approx. 1/17' do
+    xit 'deals pairs in a 2-card hand at a ratio of approx. 1/17' do
 
       cnt = 0
       X = 1000000

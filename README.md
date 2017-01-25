@@ -9,8 +9,8 @@ I am writing a Ruby program that will allow me to analyze the odds of specific h
 ```ruby
 game = 'Texas Holdem'
 cd = CardDeck.new
-hand1 = CardDeck.deal_selected(Card.new('10', 'Clubs'), Card.new('10', 'Diamonds'))
-hand2 = CardDeck.deal_selected(Card.new('3', 'Spades'), Card.new('3', 'Hearts'))
+hand1 = Hand.new(CardDeck.deal_selected(Card.new('10', 'Clubs'), Card.new('10', 'Diamonds')))
+hand2 = Hand.new(CardDeck.deal_selected(Card.new('3', 'Spades'), Card.new('3', 'Hearts')))
 board = [] # preflop
 HandAnalyzer.show_odds(game, board, hand1, hand2) # hand1 => 80%, hand2 => 20%
 ```
