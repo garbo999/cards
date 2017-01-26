@@ -17,9 +17,10 @@ class HandAnalyzer
     cd.deal_specific(hand1.cards[0], hand1.cards[1], hand2.cards[0], hand2.cards[1]) # SPLAT???
     i = 0
     n = 0
-    cd.to_ary.combination(5).each do |comb|
+    cd.deck_of_cards.combination(5).each do |comb|
       #puts comb
-      b = Board.new( [Card.new(comb[0][0], comb[0][1]), Card.new(comb[1][0], comb[1][1]), Card.new(comb[2][0], comb[2][1]), Card.new(comb[3][0], comb[3][1]), Card.new(comb[4][0], comb[4][1]) ])
+      #b = Board.new( [Card.new(comb[0][0], comb[0][1]), Card.new(comb[1][0], comb[1][1]), Card.new(comb[2][0], comb[2][1]), Card.new(comb[3][0], comb[3][1]), Card.new(comb[4][0], comb[4][1]) ])
+      b = Board.new(comb)
       i += 1
       if winner(b, hand1, hand2) 
         n += 1

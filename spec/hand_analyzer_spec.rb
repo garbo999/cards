@@ -89,8 +89,8 @@ RSpec.describe HandAnalyzer do
       expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(true)
     end
 
-    it 'shows some odds for higher vs lower pair' do 
-      board = Board.new([Card.new("2", "Diamonds"), Card.new("7", "Diamonds"), Card.new("4", "Diamonds"), Card.new("A", "Hearts"), Card.new("K", "Spades")])
+    xit 'shows some odds for higher vs lower pair' do 
+      board = Board.new([])
       hand1 = Hand.new( [Card.new("10", "Spades"), Card.new("10", "Hearts") ])
       hand2 = Hand.new( [Card.new("9", "Spades"), Card.new("9", "Hearts") ])
       expect(HandAnalyzer.show_odds(board, hand1, hand2)).to eql(0.8)
