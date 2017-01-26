@@ -8,11 +8,10 @@ I am writing a Ruby program that will allow me to analyze the odds of specific h
 
 Example 1:
 ```ruby
-game = 'Texas Holdem'
 cd = CardDeck.new
 hand1 = Hand.new(CardDeck.deal_selected(Card.new('10', 'Clubs'), Card.new('10', 'Diamonds')))
 hand2 = Hand.new(CardDeck.deal_selected(Card.new('3', 'Spades'), Card.new('3', 'Hearts')))
-board = Board.new(0) # preflop
+board = Board.new([]) # preflop
 HandAnalyzer.show_odds(game, board, hand1, hand2) # hand1 => 80%, hand2 => 20%
 ```
 
@@ -20,7 +19,6 @@ The code above creates two hands (a pair of 10s vs. a lower pair of 3s). These o
 
 Example 2:
 ```ruby
-game = 'Texas Holdem'
 cd = CardDeck.new
 hand1 = Hand.new(CardDeck.deal_selected(Card.new('10', 'Clubs'), Card.new('10', 'Diamonds')))
 hand2 = Hand.new(CardDeck.deal_selected(Card.new('3', 'Spades'), Card.new('3', 'Hearts')))

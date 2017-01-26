@@ -57,9 +57,26 @@ RSpec.describe HandAnalyzer do
 
   end
 
+  context 'odds' do
+    it 'responds to the class method :show_odds' do
+      expect(HandAnalyzer).to respond_to(:show_odds)
+    end
+
+    it 'tells us how many combinations there are' do
+      board = Board.new([])
+      hand1 = Hand.new( [Card.new("10", "Spades"), Card.new("10", "Hearts") ])
+      hand2 = Hand.new( [Card.new("9", "Spades"), Card.new("9", "Hearts") ])
+      expect(HandAnalyzer.show_odds(board, hand1, hand2)).to eql(17123)
+    end
+  end
+
   context 'evaluator' do
     it 'responds to the class method :evaluate' do
       expect(HandAnalyzer).to respond_to(:evaluate)
+    end
+
+    it 'recognises a high card' do
+      expect(HandAnalyzer.evaluate(*@high_card)).to eql(:high_card)
     end
 
     it 'recognises a pair' do

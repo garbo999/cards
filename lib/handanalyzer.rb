@@ -10,6 +10,22 @@ class HandAnalyzer
   # 1 pair          OK
   # High card
 
+  @@hand_ranking = {high_card: 0, pair: 1, two_pair: 2, three_of_a_kind: 3, straight: 4, flush: 5, fullhouse: 6, four_of_a_kind: 7, straight_flush: 8}
+
+  def self.show_odds(board, hand1, hand2, game='Texas Holdem')
+
+
+    cd = CardDeck.new
+    cd.deal_specific(hand1.cards[0], hand1.cards[1], hand2.cards[0], hand2.cards[1]) # SPLAT???
+    i = 0
+    cd.to_ary.combination(5).each do |comb|
+      i += 1
+    end
+    return i
+
+    #return 1712304
+  end
+
   def self.evaluate(board, hand)
     cards = board.cards + hand.cards
 

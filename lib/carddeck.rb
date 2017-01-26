@@ -53,6 +53,7 @@ class CardDeck
 
   def deal_specific(*card)
     card.each do |ccc|
+      #p ccc
       @deck_of_cards.delete_if{|c| c.suit == ccc.suit and c.rank == ccc.rank}
     end
   end
