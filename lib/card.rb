@@ -26,7 +26,7 @@ class Card
     @@suits.index(@suit)
   end
 
-  def <=>(other_card)
+  def <=>(other_card) # do we need this???
     if self.rank_no < other_card.rank_no
       -1
     elsif self.rank_no > other_card.rank_no

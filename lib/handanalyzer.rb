@@ -13,21 +13,41 @@ class HandAnalyzer
   @@hand_ranking = {high_card: 0, pair: 1, two_pair: 2, three_of_a_kind: 3, straight: 4, flush: 5, fullhouse: 6, four_of_a_kind: 7, straight_flush: 8}
 
   def self.show_odds(board, hand1, hand2, game='Texas Holdem')
+    cd = CardDeck.new
+    cd.deal_specific(hand1.cards[0], hand1.cards[1], hand2.cards[0], hand2.cards[1]) # SPLAT???
+    i = 0
+    n = 0
+    cd.to_ary.combination(5).each do |comb|
+      #puts comb
+      b = Board.new( [Card.new(comb[0][0], comb[0][1]), Card.new(comb[1][0], comb[1][1]), Card.new(comb[2][0], comb[2][1]), Card.new(comb[3][0], comb[3][1]), Card.new(comb[4][0], comb[4][1]) ])
+      i += 1
+      if winner(b, hand1, hand2) 
+        n += 1
+      end
+    end
+    return n.to_f/i # = 1712304
 
+  end
+
+  def self.winner(board, hand1, hand2, game='Texas Holdem')
+    @@hand_ranking[evaluate(board, hand1)] >= @@hand_ranking[evaluate(board, hand2)]
+    #return true
+  end
+
+  def self.count_combinations(board, hand1, hand2, game='Texas Holdem')
 
     cd = CardDeck.new
     cd.deal_specific(hand1.cards[0], hand1.cards[1], hand2.cards[0], hand2.cards[1]) # SPLAT???
     i = 0
     cd.to_ary.combination(5).each do |comb|
-      i += 1
+      #if @@hand_ranking[Handanalyzer.evaluate(comb, hand1) 
+        i += 1
     end
-    return i
-
-    #return 1712304
+    return i # = 1712304
   end
 
   def self.evaluate(board, hand)
-    cards = board.cards + hand.cards
+    #board.class == Array ? board : cards = board.cards + hand.cards
 
     if HandAnalyzer.straight_flush?(board, hand)
       return :straight_flush

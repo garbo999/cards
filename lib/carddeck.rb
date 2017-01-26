@@ -62,4 +62,11 @@ class CardDeck
     @deck_of_cards.detect{|c| c.suit == card.suit and c.rank == card.rank }
   end
 
+=begin
+  def combination(i)
+    @deck_of_cards.combination(i) do |c|
+      yield c
+    end
+  end
+=end
 end

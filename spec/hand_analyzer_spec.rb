@@ -62,12 +62,42 @@ RSpec.describe HandAnalyzer do
       expect(HandAnalyzer).to respond_to(:show_odds)
     end
 
+    it 'responds to the class method :winner' do
+      expect(HandAnalyzer).to respond_to(:winner)
+    end
+
     it 'tells us how many combinations there are' do
       board = Board.new([])
       hand1 = Hand.new( [Card.new("10", "Spades"), Card.new("10", "Hearts") ])
       hand2 = Hand.new( [Card.new("9", "Spades"), Card.new("9", "Hearts") ])
-      expect(HandAnalyzer.show_odds(board, hand1, hand2)).to eql(17123)
+      expect(HandAnalyzer.count_combinations(board, hand1, hand2)).to eql(1712304)
     end
+
+    it 'says that three of a kind beats one pair' do
+      board = Board.new([Card.new("10", "Diamonds"), Card.new("3", "Diamonds"), Card.new("4", "Diamonds"), Card.new("A", "Hearts"), Card.new("K", "Spades")])
+      hand1 = Hand.new( [Card.new("10", "Spades"), Card.new("10", "Hearts") ])
+      hand2 = Hand.new( [Card.new("9", "Spades"), Card.new("9", "Hearts") ])
+      expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(true)
+      expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(false)
+    end
+
+    it 'says that a pair does not beat three of a kind' do
+      board = Board.new([Card.new("2", "Diamonds"), Card.new("9", "Diamonds"), Card.new("4", "Diamonds"), Card.new("A", "Hearts"), Card.new("K", "Spades")])
+      hand1 = Hand.new( [Card.new("10", "Spades"), Card.new("10", "Hearts") ])
+      hand2 = Hand.new( [Card.new("9", "Spades"), Card.new("9", "Hearts") ])
+      expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(false)
+      expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(true)
+    end
+
+    it 'shows some odds for higher vs lower pair' do 
+      board = Board.new([Card.new("2", "Diamonds"), Card.new("7", "Diamonds"), Card.new("4", "Diamonds"), Card.new("A", "Hearts"), Card.new("K", "Spades")])
+      hand1 = Hand.new( [Card.new("10", "Spades"), Card.new("10", "Hearts") ])
+      hand2 = Hand.new( [Card.new("9", "Spades"), Card.new("9", "Hearts") ])
+      expect(HandAnalyzer.show_odds(board, hand1, hand2)).to eql(0.8)
+      # expected: 0.8
+      # got: 0.8296634242517684
+    end
+
   end
 
   context 'evaluator' do
