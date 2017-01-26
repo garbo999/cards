@@ -24,7 +24,7 @@ RSpec.describe HandAnalyzer do
     @not_a_flush = board, hand
 
     board = Board.new([Card.new("9", "Spades"), Card.new("3", "Spades"), Card.new("4", "Spades"), Card.new("A", "Hearts"), Card.new("5", "Spades")])
-    hand = Hand.new( [Card.new("6", "Spades"), Card.new("2", "Hearts") ])
+    hand = Hand.new( [Card.new("6", "Diamonds"), Card.new("2", "Hearts") ])
     @straight = board, hand
 
     board = Board.new([Card.new("2", "Diamonds"), Card.new("3", "Spades"), Card.new("7", "Spades"), Card.new("A", "Hearts"), Card.new("K", "Spades")])
@@ -53,7 +53,7 @@ RSpec.describe HandAnalyzer do
 
     board = Board.new([Card.new("2", "Diamonds"), Card.new("2", "Clubs"), Card.new("4", "Diamonds"), Card.new("6", "Clubs"), Card.new("K", "Spades")])
     hand = Hand.new( [Card.new("2", "Hearts"), Card.new("6", "Hearts") ])
-    @full_house = board, hand
+    @fullhouse = board, hand
 
   end
 
@@ -61,6 +61,35 @@ RSpec.describe HandAnalyzer do
     it 'responds to the class method :evaluate' do
       expect(HandAnalyzer).to respond_to(:evaluate)
     end
+
+    it 'recognises a pair' do
+      expect(HandAnalyzer.evaluate(*@one_pair)).to eql(:pair)
+    end
+
+    it 'recognises a two pair' do
+      expect(HandAnalyzer.evaluate(*@two_pair)).to eql(:two_pair)
+    end
+
+    it 'recognises a three of a kind' do
+      expect(HandAnalyzer.evaluate(*@three_of_a_kind)).to eql(:three_of_a_kind)
+    end
+
+    it 'recognises a straight' do
+      expect(HandAnalyzer.evaluate(*@straight)).to eql(:straight)
+    end
+    it 'recognises a flush' do
+      expect(HandAnalyzer.evaluate(*@flush)).to eql(:flush)
+    end
+    it 'recognises a full house' do
+      expect(HandAnalyzer.evaluate(*@fullhouse)).to eql(:fullhouse)
+    end
+    it 'recognises a four of a kind' do
+      expect(HandAnalyzer.evaluate(*@four_of_a_kind)).to eql(:four_of_a_kind)
+    end
+    it 'recognises a straight flush' do
+      expect(HandAnalyzer.evaluate(*@straight_flush)).to eql(:straight_flush)
+    end
+
   end
 
   context 'basic analysis methods' do
@@ -134,7 +163,7 @@ RSpec.describe HandAnalyzer do
     end
 
     it 'recognizes a fullhouse' do
-      expect(HandAnalyzer.is_fullhouse?(*@full_house)).to eql(true)
+      expect(HandAnalyzer.is_fullhouse?(*@fullhouse)).to eql(true)
     end
   end
 

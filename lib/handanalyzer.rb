@@ -10,7 +10,7 @@ class HandAnalyzer
   # 1 pair          OK
   # High card
 
-  def evaluate(board, hand)
+  def self.evaluate(board, hand)
     cards = board.cards + hand.cards
 
     if HandAnalyzer.straight_flush?(board, hand)
