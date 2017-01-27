@@ -18,6 +18,10 @@ RSpec.describe HandAnalyzer do
     hand = [Card.new("6", "Diamonds"), Card.new("2", "Hearts") ]
     @straight = board, hand
 
+    board = [Card.new("A", "Spades"), Card.new("3", "Spades"), Card.new("4", "Spades"), Card.new("A", "Hearts"), Card.new("5", "Spades")]
+    hand = [Card.new("7", "Diamonds"), Card.new("2", "Hearts") ]
+    @straight_with_ace = board, hand
+
     board = [Card.new("2", "Diamonds"), Card.new("3", "Diamonds"), Card.new("4", "Diamonds"), Card.new("A", "Hearts"), Card.new("K", "Spades")]
     hand = [Card.new("5", "Diamonds"), Card.new("6", "Diamonds") ]
     @straight_flush = board, hand
@@ -72,7 +76,7 @@ RSpec.describe HandAnalyzer do
       expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(true)
     end
 
-    xit 'shows some odds for higher vs lower pair' do 
+    it 'shows some odds for higher vs lower pair' do 
       board = []
       hand1 = [Card.new("10", "Spades"), Card.new("10", "Hearts") ]
       hand2 = [Card.new("9", "Spades"), Card.new("9", "Hearts") ]

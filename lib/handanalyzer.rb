@@ -4,13 +4,13 @@ class HandAnalyzer
 
   def self.show_odds(board, hand1, hand2, game='Texas Holdem')
     cd = CardDeck.new
-    cd.deal_specific(hand1.cards[0], hand1.cards[1], hand2.cards[0], hand2.cards[1])
+    cd.deal_specific(hand1[0], hand1[1], hand2[0], hand2[1])
     i = 0
     n = 0
     cd.deck_of_cards.combination(5).each do |comb|
-      b = Board.new(comb)
+      #b = Board.new(comb)
       i += 1
-      if winner(b, hand1, hand2) 
+      if winner(comb, hand1, hand2) 
         n += 1
       end
     end
@@ -79,7 +79,7 @@ private
     # check 21 combinations = 7 taken 5 times
     h = [[0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0]]
     cards.each do |c| 
-      h_rank[c.suit_no][c.rank_no] if h_rank[c.rank_no] += 1
+      h[c.suit_no][c.rank_no]  += 1
     end
     h.each do |x|
       return true if is_straight?(x)
@@ -89,7 +89,7 @@ private
   def self.is_straight?(cards) # ACE = 1 or 14!!!
     c=0
     cards.each do |x|
-      if x==1 then
+      if x > 0 then
         c+=1
         if c==5 then
           return true
@@ -98,7 +98,11 @@ private
         c=0
       end
     end
-    return false
+    if cards[0] > 0 and cards[1] > 0 and cards[2] > 0 and cards[3] > 0 and cards[12] > 0
+      return true
+    else
+      return false
+    end
   end
 
 end

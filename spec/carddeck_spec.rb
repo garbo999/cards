@@ -63,7 +63,7 @@ RSpec.describe CardDeck do
 
     it 'deals the last card from the (unshuffled) deck' do
       card = @cd.deal
-      expect(card[0].rank).to eql('K')
+      expect(card[0].rank).to eql('A')
       expect(card[0].suit).to eql('Clubs')
     end
 
@@ -103,8 +103,8 @@ RSpec.describe CardDeck do
       sc2 = Card.new("10", "Spades")
       sc3 = Card.new("A", "Clubs")
       sc4 = Card.new("A", "Diamonds")
-      @cd.deal(5)
       @cd.deal_specific(sc1, sc2, sc3, sc4)
+      @cd.deal(5)
       expect(@cd.count_cards).to eql(43)
     end
   end
