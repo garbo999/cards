@@ -48,23 +48,38 @@ class HandAnalyzer
   end
 
   def self.evaluate(board, hand)
-    #board.class == Array ? board : cards = board.cards + hand.cards
+    cards = board.cards + hand.cards
 
-    if HandAnalyzer.straight_flush?(board, hand)
+    h_rank = Hash.new
+    h_suit = Hash.new
+    cards.each do |c| 
+      h_rank[c.rank] ? h_rank[c.rank] += 1 : h_rank[c.rank] = 1
+      h_suit[c.suit] ? h_suit[c.suit] += 1 : h_suit[c.suit] = 1
+    end
+
+    hrv = h_rank.values
+
+    is_straight = HandAnalyzer.is_straight?(board, hand)
+
+    is_flush = h_suit.values.max >= 5
+
+    if is_flush and is_straight and HandAnalyzer.straight_flush?(board, hand)
       return :straight_flush
-    elsif HandAnalyzer.is_four_of_a_kind?(board, hand)
+    elsif hrv.max == 4
       return :four_of_a_kind
-    elsif HandAnalyzer.is_fullhouse?(board, hand)
+    elsif hrv.include?(3) and hrv.include?(2)
       return :fullhouse
-    elsif HandAnalyzer.is_flush?(board, hand)
+    elsif is_flush
       return :flush
-    elsif HandAnalyzer.is_straight?(board, hand)
+    elsif is_straight
       return :straight
-    elsif HandAnalyzer.is_three_of_a_kind?(board, hand)
+    elsif hrv.max == 3
       return :three_of_a_kind
-    elsif HandAnalyzer.is_two_pair?(board, hand)
+    elsif hrv.max == 1
+      return :high_card
+    elsif hrv.count(2) == 2
       return :two_pair
-    elsif HandAnalyzer.is_pair?(board, hand)
+    elsif hrv.include?(2)
       return :pair
     else
       return :high_card
@@ -156,7 +171,8 @@ class HandAnalyzer
     return false
   end
 
-  def self.is_straight(cards)
+  def self.is_straight(cards) # ACE = 1 or 14!!!
+    # [2,]
     card_rank = cards.map{|x| x.rank_no}.sort.uniq
     card_rank.each_cons(5) {|s| return true if s.max - s.min == 4} 
     return false
