@@ -1,29 +1,29 @@
 class Card
   include Comparable
-  attr_reader :rank, :suit
+  attr_reader :rank_no, :suit_no
 
   @@ranks = %w{A 2 3 4 5 6 7 8 9 10 J Q K}
   @@suits = %w{Spades Hearts Diamonds Clubs}
 
   def initialize(rank, suit)
     if @@ranks.include?(rank) and @@suits.include?(suit)
-      @rank = rank
-      @suit = suit
+      @rank_no = @@ranks.index(rank)
+      @suit_no = @@suits.index(suit)
     else
       raise ArgumentError
     end
   end
   
   def to_ary
-    [@rank, @suit]
+    [self.rank, self.suit]
   end
 
-  def rank_no
-    @@ranks.index(@rank)
+  def rank
+    @@ranks[@rank_no]
   end
 
-  def suit_no
-    @@suits.index(@suit)
+  def suit
+    @@suits[@suit_no]
   end
 
   def <=>(other_card) # do we need this???

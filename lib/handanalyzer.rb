@@ -37,36 +37,36 @@ class HandAnalyzer
   def self.evaluate(board, hand)
     cards = board + hand
 
-    h_rank = Hash.new
-    h_suit = Hash.new
+    h_rank = [0,0,0,0,0,0,0,0,0,0,0,0,0]
+    h_suit = [0,0,0,0]
+
     cards.each do |c| 
-      h_rank[c.rank] ? h_rank[c.rank] += 1 : h_rank[c.rank] = 1
-      h_suit[c.suit] ? h_suit[c.suit] += 1 : h_suit[c.suit] = 1
+      h_rank[c.rank_no] += 1
+      h_suit[c.suit_no] += 1
     end
 
-    hrv = h_rank.values
 
     is_straight = is_straight?(cards)
 
-    is_flush = h_suit.values.max >= 5
+    is_flush = h_suit.max >= 5
 
     if is_flush and is_straight and HandAnalyzer.straight_flush?(cards)
       return :straight_flush
-    elsif hrv.max == 4
+    elsif h_rank.max == 4
       return :four_of_a_kind
-    elsif hrv.include?(3) and hrv.include?(2)
+    elsif h_rank.include?(3) and h_rank.include?(2)
       return :fullhouse
     elsif is_flush
       return :flush
     elsif is_straight
       return :straight
-    elsif hrv.max == 3
+    elsif h_rank.max == 3
       return :three_of_a_kind
-    elsif hrv.max == 1
+    elsif h_rank.max == 1
       return :high_card
-    elsif hrv.count(2) == 2
+    elsif h_rank.count(2) == 2
       return :two_pair
-    elsif hrv.include?(2)
+    elsif h_rank.include?(2)
       return :pair
     else
       return :high_card
@@ -79,8 +79,8 @@ class HandAnalyzer
     h_suit = {}
     cards.combination(5).each do |comb|
       comb.each do |c| 
-        h_rank[c.rank] ? h_rank[c.rank] += 1 : h_rank[c.rank] = 1
-        h_suit[c.suit] ? h_suit[c.suit] += 1 : h_suit[c.suit] = 1
+        h_rank[c.rank_no] ? h_rank[c.rank_no] += 1 : h_rank[c.rank_no] = 1
+        h_suit[c.suit_no] ? h_suit[c.suit_no] += 1 : h_suit[c.suit_no] = 1
       end
       return true if h_suit.values.max >= 5 and is_straight?(comb)
     end
