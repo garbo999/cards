@@ -8,13 +8,9 @@ class CardDeck
   @@suits = %w{Spades Hearts Diamonds Clubs}
 
   def initialize
-    #puts "@@ranks=#{@@ranks}"
-    #puts "@@suits=#{@@suits}"
     @deck_of_cards = Array.new
     @@suits.each do |suit|
-      #puts suit
       @@ranks.each do |rank|
-        #puts rank
         @deck_of_cards << Card.new(rank, suit)
       end
     end
@@ -55,7 +51,6 @@ class CardDeck
 
   def deal_specific(*card)
     card.each do |ccc|
-      #p ccc
       @deck_of_cards.delete_if{|c| c.suit == ccc.suit and c.rank == ccc.rank}
     end
   end
@@ -64,11 +59,4 @@ class CardDeck
     @deck_of_cards.detect{|c| c.suit == card.suit and c.rank == card.rank }
   end
 
-=begin
-  def combination(i)
-    @deck_of_cards.combination(i) do |c|
-      yield c
-    end
-  end
-=end
 end

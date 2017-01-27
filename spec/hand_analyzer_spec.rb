@@ -3,56 +3,56 @@ require 'handanalyzer'
 RSpec.describe HandAnalyzer do 
 
   before :each do
-    board = Board.new([Card.new("2", "Spades"), Card.new("3", "Hearts"), Card.new("7", "Spades"), Card.new("A", "Hearts"), Card.new("9", "Spades")])
-    hand = Hand.new( [Card.new("10", "Spades"), Card.new("9", "Hearts") ])
+    board = [Card.new("2", "Spades"), Card.new("3", "Hearts"), Card.new("7", "Spades"), Card.new("A", "Hearts"), Card.new("9", "Spades")]
+    hand = [Card.new("10", "Spades"), Card.new("9", "Hearts") ]
     @one_pair = board, hand
 
-    board = Board.new([Card.new("2", "Spades"), Card.new("3", "Hearts"), Card.new("7", "Spades"), Card.new("A", "Hearts"), Card.new("K", "Spades")])
-    hand = Hand.new( [Card.new("10", "Spades"), Card.new("9", "Hearts") ])
+    board = [Card.new("2", "Spades"), Card.new("3", "Hearts"), Card.new("7", "Spades"), Card.new("A", "Hearts"), Card.new("K", "Spades")]
+    hand = [Card.new("10", "Spades"), Card.new("9", "Hearts") ]
     @high_card = board, hand
 
-    board = Board.new([])
-    hand = Hand.new( [Card.new("9", "Spades"), Card.new("10", "Hearts") ])
+    board = []
+    hand = [Card.new("9", "Spades"), Card.new("10", "Hearts") ]
     @empty_board_with_no_pair = board, hand
 
-    board = Board.new([Card.new("2", "Spades"), Card.new("3", "Spades"), Card.new("7", "Spades"), Card.new("A", "Hearts"), Card.new("K", "Spades")])
-    hand = Hand.new( [Card.new("10", "Spades"), Card.new("9", "Hearts") ])
+    board = [Card.new("2", "Spades"), Card.new("3", "Spades"), Card.new("7", "Spades"), Card.new("A", "Hearts"), Card.new("K", "Spades")]
+    hand = [Card.new("10", "Spades"), Card.new("9", "Hearts") ]
     @flush = board, hand
 
-    board = Board.new([Card.new("2", "Diamonds"), Card.new("3", "Spades"), Card.new("7", "Spades"), Card.new("A", "Hearts"), Card.new("K", "Spades")])
-    hand = Hand.new( [Card.new("10", "Spades"), Card.new("9", "Hearts") ])
+    board = [Card.new("2", "Diamonds"), Card.new("3", "Spades"), Card.new("7", "Spades"), Card.new("A", "Hearts"), Card.new("K", "Spades")]
+    hand = [Card.new("10", "Spades"), Card.new("9", "Hearts") ]
     @not_a_flush = board, hand
 
-    board = Board.new([Card.new("9", "Spades"), Card.new("3", "Spades"), Card.new("4", "Spades"), Card.new("A", "Hearts"), Card.new("5", "Spades")])
-    hand = Hand.new( [Card.new("6", "Diamonds"), Card.new("2", "Hearts") ])
+    board = [Card.new("9", "Spades"), Card.new("3", "Spades"), Card.new("4", "Spades"), Card.new("A", "Hearts"), Card.new("5", "Spades")]
+    hand = [Card.new("6", "Diamonds"), Card.new("2", "Hearts") ]
     @straight = board, hand
 
-    board = Board.new([Card.new("2", "Diamonds"), Card.new("3", "Spades"), Card.new("7", "Spades"), Card.new("A", "Hearts"), Card.new("K", "Spades")])
-    hand = Hand.new( [Card.new("10", "Spades"), Card.new("9", "Hearts") ])
+    board = [Card.new("2", "Diamonds"), Card.new("3", "Spades"), Card.new("7", "Spades"), Card.new("A", "Hearts"), Card.new("K", "Spades")]
+    hand = [Card.new("10", "Spades"), Card.new("9", "Hearts") ]
     @not_a_straight = board, hand
 
-    board = Board.new([Card.new("2", "Diamonds"), Card.new("3", "Diamonds"), Card.new("4", "Diamonds"), Card.new("A", "Hearts"), Card.new("K", "Spades")])
-    hand = Hand.new( [Card.new("5", "Diamonds"), Card.new("6", "Diamonds") ])
+    board = [Card.new("2", "Diamonds"), Card.new("3", "Diamonds"), Card.new("4", "Diamonds"), Card.new("A", "Hearts"), Card.new("K", "Spades")]
+    hand = [Card.new("5", "Diamonds"), Card.new("6", "Diamonds") ]
     @straight_flush = board, hand
 
-    board = Board.new([Card.new("2", "Diamonds"), Card.new("3", "Diamonds"), Card.new("4", "Diamonds"), Card.new("A", "Diamonds"), Card.new("K", "Spades")])
-    hand = Hand.new( [Card.new("5", "Diamonds"), Card.new("6", "Hearts") ])
+    board = [Card.new("2", "Diamonds"), Card.new("3", "Diamonds"), Card.new("4", "Diamonds"), Card.new("A", "Diamonds"), Card.new("K", "Spades")]
+    hand = [Card.new("5", "Diamonds"), Card.new("6", "Hearts") ]
     @not_a_straight_flush = board, hand
 
-    board = Board.new([Card.new("2", "Diamonds"), Card.new("2", "Clubs"), Card.new("4", "Diamonds"), Card.new("A", "Diamonds"), Card.new("K", "Spades")])
-    hand = Hand.new( [Card.new("2", "Hearts"), Card.new("6", "Hearts") ])
+    board = [Card.new("2", "Diamonds"), Card.new("2", "Clubs"), Card.new("4", "Diamonds"), Card.new("A", "Diamonds"), Card.new("K", "Spades")]
+    hand = [Card.new("2", "Hearts"), Card.new("6", "Hearts") ]
     @three_of_a_kind = board, hand
 
-    board = Board.new([Card.new("2", "Diamonds"), Card.new("2", "Clubs"), Card.new("4", "Diamonds"), Card.new("2", "Spades"), Card.new("K", "Spades")])
-    hand = Hand.new( [Card.new("2", "Hearts"), Card.new("6", "Hearts") ])
+    board = [Card.new("2", "Diamonds"), Card.new("2", "Clubs"), Card.new("4", "Diamonds"), Card.new("2", "Spades"), Card.new("K", "Spades")]
+    hand = [Card.new("2", "Hearts"), Card.new("6", "Hearts") ]
     @four_of_a_kind = board, hand
 
-    board = Board.new([Card.new("2", "Diamonds"), Card.new("10", "Clubs"), Card.new("4", "Diamonds"), Card.new("A", "Diamonds"), Card.new("K", "Spades")])
-    hand = Hand.new( [Card.new("2", "Hearts"), Card.new("4", "Clubs") ])
+    board = [Card.new("2", "Diamonds"), Card.new("10", "Clubs"), Card.new("4", "Diamonds"), Card.new("A", "Diamonds"), Card.new("K", "Spades")]
+    hand = [Card.new("2", "Hearts"), Card.new("4", "Clubs") ]
     @two_pair = board, hand
 
-    board = Board.new([Card.new("2", "Diamonds"), Card.new("2", "Clubs"), Card.new("4", "Diamonds"), Card.new("6", "Clubs"), Card.new("K", "Spades")])
-    hand = Hand.new( [Card.new("2", "Hearts"), Card.new("6", "Hearts") ])
+    board = [Card.new("2", "Diamonds"), Card.new("2", "Clubs"), Card.new("4", "Diamonds"), Card.new("6", "Clubs"), Card.new("K", "Spades")]
+    hand = [Card.new("2", "Hearts"), Card.new("6", "Hearts") ]
     @fullhouse = board, hand
 
   end
@@ -67,32 +67,32 @@ RSpec.describe HandAnalyzer do
     end
 
     it 'tells us how many combinations there are' do
-      board = Board.new([])
-      hand1 = Hand.new( [Card.new("10", "Spades"), Card.new("10", "Hearts") ])
-      hand2 = Hand.new( [Card.new("9", "Spades"), Card.new("9", "Hearts") ])
+      board = []
+      hand1 = [Card.new("10", "Spades"), Card.new("10", "Hearts") ]
+      hand2 = [Card.new("9", "Spades"), Card.new("9", "Hearts") ]
       expect(HandAnalyzer.count_combinations(board, hand1, hand2)).to eql(1712304)
     end
 
     it 'says that three of a kind beats one pair' do
-      board = Board.new([Card.new("10", "Diamonds"), Card.new("3", "Diamonds"), Card.new("4", "Diamonds"), Card.new("A", "Hearts"), Card.new("K", "Spades")])
-      hand1 = Hand.new( [Card.new("10", "Spades"), Card.new("10", "Hearts") ])
-      hand2 = Hand.new( [Card.new("9", "Spades"), Card.new("9", "Hearts") ])
+      board = [Card.new("10", "Diamonds"), Card.new("3", "Diamonds"), Card.new("4", "Diamonds"), Card.new("A", "Hearts"), Card.new("K", "Spades")]
+      hand1 = [Card.new("10", "Spades"), Card.new("10", "Hearts") ]
+      hand2 = [Card.new("9", "Spades"), Card.new("9", "Hearts") ]
       expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(true)
       expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(false)
     end
 
     it 'says that a pair does not beat three of a kind' do
-      board = Board.new([Card.new("2", "Diamonds"), Card.new("9", "Diamonds"), Card.new("4", "Diamonds"), Card.new("A", "Hearts"), Card.new("K", "Spades")])
-      hand1 = Hand.new( [Card.new("10", "Spades"), Card.new("10", "Hearts") ])
-      hand2 = Hand.new( [Card.new("9", "Spades"), Card.new("9", "Hearts") ])
+      board = [Card.new("2", "Diamonds"), Card.new("9", "Diamonds"), Card.new("4", "Diamonds"), Card.new("A", "Hearts"), Card.new("K", "Spades")]
+      hand1 = [Card.new("10", "Spades"), Card.new("10", "Hearts") ]
+      hand2 = [Card.new("9", "Spades"), Card.new("9", "Hearts") ]
       expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(false)
       expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(true)
     end
 
     xit 'shows some odds for higher vs lower pair' do 
-      board = Board.new([])
-      hand1 = Hand.new( [Card.new("10", "Spades"), Card.new("10", "Hearts") ])
-      hand2 = Hand.new( [Card.new("9", "Spades"), Card.new("9", "Hearts") ])
+      board = []
+      hand1 = [Card.new("10", "Spades"), Card.new("10", "Hearts") ]
+      hand2 = [Card.new("9", "Spades"), Card.new("9", "Hearts") ]
       expect(HandAnalyzer.show_odds(board, hand1, hand2)).to eql(0.8)
       # expected: 0.8
       # got: 0.8296634242517684
@@ -137,81 +137,6 @@ RSpec.describe HandAnalyzer do
       expect(HandAnalyzer.evaluate(*@straight_flush)).to eql(:straight_flush)
     end
 
-  end
-
-  context 'basic analysis methods' do
-
-    it 'responds to the class method :is_pair?' do
-      expect(HandAnalyzer).to respond_to(:is_pair?)
-    end
-
-    it 'ranks an empty board and a pair as a pair' do
-      expect(HandAnalyzer.is_pair?(Board.new([]), Hand.new( [Card.new("9", "Spades"), Card.new("9", "Hearts") ]) )).to eql(true)
-    end
-
-    it 'ranks a board with 5 cards and a pair as a pair' do
-      expect(HandAnalyzer.is_pair?(*@one_pair)).to eql(true)
-    end
-
-    it 'does not rank a board with 5 cards and no pair as a pair' do
-      expect(HandAnalyzer.is_pair?(*@high_card)).to eql(false)
-    end
-
-    it 'does not rank an empty board and two unpaired cards as a pair' do
-      expect(HandAnalyzer.is_pair?(*@empty_board_with_no_pair)).to eql(false)
-    end
-
-    it 'knows if it has a flush' do
-      expect(HandAnalyzer.is_flush?(*@flush)).to eql(true)
-    end
-
-    it 'knows when it is not a flush' do
-      expect(HandAnalyzer.is_flush?(*@not_a_flush)).to eql(false)
-    end
-
-    it 'knows if it has a straight' do
-      expect(HandAnalyzer.is_straight?(*@straight)).to eql(true)
-    end
-
-    it 'knows when it is not a straight' do
-      expect(HandAnalyzer.is_straight?(*@not_a_straight)).to eql(false)
-    end
-
-    it 'knows when it has a straight flush' do
-      expect(HandAnalyzer.straight_flush?(*@straight_flush)).to eql(true)
-    end
-
-    it 'knows when it is not a straight flush' do # write some more gnarly edge case examples !?
-      expect(HandAnalyzer.straight_flush?(*@not_a_straight_flush)).to eql(false)
-    end
-
-    it 'recognizes 3 of a kind' do
-      expect(HandAnalyzer.is_three_of_a_kind?(*@three_of_a_kind)).to eql(true)
-    end
-
-    it 'does not recognize a pair as 3 of a kind' do
-      expect(HandAnalyzer.is_three_of_a_kind?(*@one_pair)).to eql(false)
-    end
-
-    it 'recognizes 2 pairs' do
-      expect(HandAnalyzer.is_two_pair?(*@two_pair)).to eql(true)
-    end
-
-    it 'does not recognize 3 of a kind as 2 pairs' do
-      expect(HandAnalyzer.is_two_pair?(*@three_of_a_kind)).to eql(false)
-    end
-
-    it 'recognizes 4 of a kind' do
-      expect(HandAnalyzer.is_four_of_a_kind?(*@four_of_a_kind)).to eql(true)
-    end
-
-    it 'does not recognize 3 of a kind as 4 of a kind' do
-      expect(HandAnalyzer.is_four_of_a_kind?(*@three_of_a_kind)).to eql(false)
-    end
-
-    it 'recognizes a fullhouse' do
-      expect(HandAnalyzer.is_fullhouse?(*@fullhouse)).to eql(true)
-    end
   end
 
 end
