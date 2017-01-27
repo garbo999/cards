@@ -7,20 +7,29 @@ class HandAnalyzer
     cd.deal_specific(hand1[0], hand1[1], hand2[0], hand2[1])
     i = 0
     n = 0
+    ties = 0
     cd.deck_of_cards.combination(5).each do |comb|
       #b = Board.new(comb)
       i += 1
-      if winner(comb, hand1, hand2) 
+      win = winner(comb, hand1, hand2)
+      if win == true
         n += 1
+      elsif win == nil
+        ties += 1
       end
     end
-    return n.to_f/i # = 1712304
+    return [n.to_f/i, ties.to_f/i] # = 1712304
 
   end
 
   def self.winner(board, hand1, hand2, game='Texas Holdem')
-    @@hand_ranking[evaluate(board, hand1)] >= @@hand_ranking[evaluate(board, hand2)]
-    #return true
+    if @@hand_ranking[evaluate(board, hand1)] > @@hand_ranking[evaluate(board, hand2)]
+      return true
+    elsif @@hand_ranking[evaluate(board, hand1)] == @@hand_ranking[evaluate(board, hand2)]
+      return nil
+    else
+      return false
+    end
   end
 
   def self.count_combinations(board, hand1, hand2, game='Texas Holdem')
