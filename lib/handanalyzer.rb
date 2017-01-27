@@ -46,11 +46,11 @@ class HandAnalyzer
     end
 
 
-    is_straight = is_straight?(cards)
+    is_straight = is_straight?(h_rank)
 
     is_flush = h_suit.max >= 5
 
-    if is_flush and is_straight and HandAnalyzer.straight_flush?(cards)
+    if is_flush and is_straight  #and HandAnalyzer.straight_flush?(cards)
       return :straight_flush
     elsif h_rank.max == 4
       return :four_of_a_kind
@@ -75,24 +75,29 @@ class HandAnalyzer
 
   def self.straight_flush?(cards)
     # check 21 combinations = 7 taken 5 times
-    h_rank = {}
-    h_suit = {}
-    cards.combination(5).each do |comb|
-      comb.each do |c| 
-        h_rank[c.rank_no] ? h_rank[c.rank_no] += 1 : h_rank[c.rank_no] = 1
-        h_suit[c.suit_no] ? h_suit[c.suit_no] += 1 : h_suit[c.suit_no] = 1
-      end
-      return true if h_suit.values.max >= 5 and is_straight?(comb)
+    h = [[0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0]]
+    cards.each do |c| 
+      h_rank[c.suit_no][c.rank_no] if h_rank[c.rank_no] += 1
     end
-    return false
+    h.each do |x|
+      return true if is_straight?(x)
+    end
   end
 
   private
 
   def self.is_straight?(cards) # ACE = 1 or 14!!!
-    # [2,]
-    card_rank = cards.map{|x| x.rank_no}.sort.uniq
-    card_rank.each_cons(5) {|s| return true if s.max - s.min == 4} 
+    c=0
+    cards.each do |x|
+      if x==1 then
+        c+=1
+        if c==5 then
+          return true
+        end
+      else
+        c=0
+      end
+    end
     return false
   end
 
