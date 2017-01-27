@@ -104,7 +104,7 @@ RSpec.describe CardDeck do
       sc2 = Card.new("10", "Spades")
       sc3 = Card.new("A", "Clubs")
       sc4 = Card.new("A", "Diamonds")
-      board_cards = @cd.deal(5)
+      @cd.deal(5)
       @cd.deal_specific(sc1, sc2, sc3, sc4)
       expect(@cd.count_cards).to eql(43)
     end
