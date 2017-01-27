@@ -40,8 +40,8 @@ class HandAnalyzer
     h_rank = Hash.new
     h_suit = Hash.new
     cards.each do |c| 
-      h_rank[c.rank] ? h_rank[c.rank] += 1 : h_rank[c.rank] = 1
-      h_suit[c.suit] ? h_suit[c.suit] += 1 : h_suit[c.suit] = 1
+      h_rank[c.rank_no] ? h_rank[c.rank_no] += 1 : h_rank[c.rank_no] = 1
+      h_suit[c.suit_no] ? h_suit[c.suit_no] += 1 : h_suit[c.suit_no] = 1
     end
 
     hrv = h_rank.values
@@ -79,8 +79,8 @@ class HandAnalyzer
     h_suit = {}
     cards.combination(5).each do |comb|
       comb.each do |c| 
-        h_rank[c.rank] ? h_rank[c.rank] += 1 : h_rank[c.rank] = 1
-        h_suit[c.suit] ? h_suit[c.suit] += 1 : h_suit[c.suit] = 1
+        h_rank[c.rank_no] ? h_rank[c.rank_no] += 1 : h_rank[c.rank_no] = 1
+        h_suit[c.suit_no] ? h_suit[c.suit_no] += 1 : h_suit[c.suit_no] = 1
       end
       return true if h_suit.values.max >= 5 and is_straight?(comb)
     end
