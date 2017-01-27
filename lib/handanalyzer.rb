@@ -50,7 +50,7 @@ class HandAnalyzer
 
     is_flush = h_suit.max >= 5
 
-    if is_flush and is_straight  #and HandAnalyzer.straight_flush?(cards)
+    if is_flush and is_straight and straight_flush?(cards)
       return :straight_flush
     elsif h_rank.max == 4
       return :four_of_a_kind
@@ -73,6 +73,8 @@ class HandAnalyzer
     end      
   end
 
+private
+
   def self.straight_flush?(cards)
     # check 21 combinations = 7 taken 5 times
     h = [[0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0]]
@@ -83,8 +85,6 @@ class HandAnalyzer
       return true if is_straight?(x)
     end
   end
-
-  private
 
   def self.is_straight?(cards) # ACE = 1 or 14!!!
     c=0
