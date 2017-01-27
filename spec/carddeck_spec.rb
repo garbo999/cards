@@ -9,7 +9,6 @@ RSpec.describe CardDeck do
   context 'basic CardDeck stuff' do
 
     it 'instantiates a CardDeck object' do
-      #@cd = CardDeck.new
       expect(@cd).to be
     end
 

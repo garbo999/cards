@@ -4,40 +4,23 @@ RSpec.describe HandAnalyzer do
 
   before :each do
     board = [Card.new("2", "Spades"), Card.new("3", "Hearts"), Card.new("7", "Spades"), Card.new("A", "Hearts"), Card.new("9", "Spades")]
+
     hand = [Card.new("10", "Spades"), Card.new("9", "Hearts") ]
     @one_pair = board, hand
 
-    board = [Card.new("2", "Spades"), Card.new("3", "Hearts"), Card.new("7", "Spades"), Card.new("A", "Hearts"), Card.new("K", "Spades")]
-    hand = [Card.new("10", "Spades"), Card.new("9", "Hearts") ]
+    hand = [Card.new("10", "Spades"), Card.new("K", "Hearts") ]
     @high_card = board, hand
 
-    board = []
-    hand = [Card.new("9", "Spades"), Card.new("10", "Hearts") ]
-    @empty_board_with_no_pair = board, hand
-
-    board = [Card.new("2", "Spades"), Card.new("3", "Spades"), Card.new("7", "Spades"), Card.new("A", "Hearts"), Card.new("K", "Spades")]
-    hand = [Card.new("10", "Spades"), Card.new("9", "Hearts") ]
+    hand = [Card.new("10", "Spades"), Card.new("K", "Spades") ]
     @flush = board, hand
-
-    board = [Card.new("2", "Diamonds"), Card.new("3", "Spades"), Card.new("7", "Spades"), Card.new("A", "Hearts"), Card.new("K", "Spades")]
-    hand = [Card.new("10", "Spades"), Card.new("9", "Hearts") ]
-    @not_a_flush = board, hand
 
     board = [Card.new("9", "Spades"), Card.new("3", "Spades"), Card.new("4", "Spades"), Card.new("A", "Hearts"), Card.new("5", "Spades")]
     hand = [Card.new("6", "Diamonds"), Card.new("2", "Hearts") ]
     @straight = board, hand
 
-    board = [Card.new("2", "Diamonds"), Card.new("3", "Spades"), Card.new("7", "Spades"), Card.new("A", "Hearts"), Card.new("K", "Spades")]
-    hand = [Card.new("10", "Spades"), Card.new("9", "Hearts") ]
-    @not_a_straight = board, hand
-
     board = [Card.new("2", "Diamonds"), Card.new("3", "Diamonds"), Card.new("4", "Diamonds"), Card.new("A", "Hearts"), Card.new("K", "Spades")]
     hand = [Card.new("5", "Diamonds"), Card.new("6", "Diamonds") ]
     @straight_flush = board, hand
-
-    board = [Card.new("2", "Diamonds"), Card.new("3", "Diamonds"), Card.new("4", "Diamonds"), Card.new("A", "Diamonds"), Card.new("K", "Spades")]
-    hand = [Card.new("5", "Diamonds"), Card.new("6", "Hearts") ]
-    @not_a_straight_flush = board, hand
 
     board = [Card.new("2", "Diamonds"), Card.new("2", "Clubs"), Card.new("4", "Diamonds"), Card.new("A", "Diamonds"), Card.new("K", "Spades")]
     hand = [Card.new("2", "Hearts"), Card.new("6", "Hearts") ]
