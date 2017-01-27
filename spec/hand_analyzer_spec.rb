@@ -124,6 +124,9 @@ RSpec.describe HandAnalyzer do
     it 'recognises a straight' do
       expect(HandAnalyzer.evaluate(*@straight)).to eql(:straight)
     end
+    it 'recognises a straight that starts with an Ace' do
+      expect(HandAnalyzer.evaluate(*@straight_with_ace)).to eql(:straight)
+    end
     it 'recognises a flush' do
       expect(HandAnalyzer.evaluate(*@flush)).to eql(:flush)
     end
