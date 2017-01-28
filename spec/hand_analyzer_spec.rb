@@ -64,16 +64,16 @@ RSpec.describe HandAnalyzer do
       board = [Card.new("10", "Diamonds"), Card.new("3", "Diamonds"), Card.new("4", "Diamonds"), Card.new("A", "Hearts"), Card.new("K", "Spades")]
       hand1 = [Card.new("10", "Spades"), Card.new("10", "Hearts") ]
       hand2 = [Card.new("9", "Spades"), Card.new("9", "Hearts") ]
-      expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(true)
-      expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(false)
+      expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(1)
+      expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(2)
     end
 
     it 'says that a pair does not beat three of a kind' do
       board = [Card.new("2", "Diamonds"), Card.new("9", "Diamonds"), Card.new("4", "Diamonds"), Card.new("A", "Hearts"), Card.new("K", "Spades")]
       hand1 = [Card.new("10", "Spades"), Card.new("10", "Hearts") ]
       hand2 = [Card.new("9", "Spades"), Card.new("9", "Hearts") ]
-      expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(false)
-      expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(true)
+      expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(2)
+      expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(1)
     end
 
     xit 'shows some odds for higher vs lower pair' do 
@@ -93,38 +93,38 @@ RSpec.describe HandAnalyzer do
     end
 
     it 'recognises a high card' do
-      expect(HandAnalyzer.evaluate(*@high_card)).to eql(:high_card)
+      expect(HandAnalyzer.evaluate(*@high_card)[0]).to eql(:high_card)
     end
 
     it 'recognises a pair' do
-      expect(HandAnalyzer.evaluate(*@one_pair)).to eql(:pair)
+      expect(HandAnalyzer.evaluate(*@one_pair)[0]).to eql(:pair)
     end
 
     it 'recognises a two pair' do
-      expect(HandAnalyzer.evaluate(*@two_pair)).to eql(:two_pair)
+      expect(HandAnalyzer.evaluate(*@two_pair)[0]).to eql(:two_pair)
     end
 
     it 'recognises a three of a kind' do
-      expect(HandAnalyzer.evaluate(*@three_of_a_kind)).to eql(:three_of_a_kind)
+      expect(HandAnalyzer.evaluate(*@three_of_a_kind)[0]).to eql(:three_of_a_kind)
     end
 
     it 'recognises a straight' do
-      expect(HandAnalyzer.evaluate(*@straight)).to eql(:straight)
+      expect(HandAnalyzer.evaluate(*@straight)[0]).to eql(:straight)
     end
     it 'recognises a straight that starts with an Ace' do
-      expect(HandAnalyzer.evaluate(*@straight_with_ace)).to eql(:straight)
+      expect(HandAnalyzer.evaluate(*@straight_with_ace)[0]).to eql(:straight)
     end
     it 'recognises a flush' do
-      expect(HandAnalyzer.evaluate(*@flush)).to eql(:flush)
+      expect(HandAnalyzer.evaluate(*@flush)[0]).to eql(:flush)
     end
     it 'recognises a full house' do
-      expect(HandAnalyzer.evaluate(*@fullhouse)).to eql(:fullhouse)
+      expect(HandAnalyzer.evaluate(*@fullhouse)[0]).to eql(:fullhouse)
     end
     it 'recognises a four of a kind' do
-      expect(HandAnalyzer.evaluate(*@four_of_a_kind)).to eql(:four_of_a_kind)
+      expect(HandAnalyzer.evaluate(*@four_of_a_kind)[0]).to eql(:four_of_a_kind)
     end
     it 'recognises a straight flush' do
-      expect(HandAnalyzer.evaluate(*@straight_flush)).to eql(:straight_flush)
+      expect(HandAnalyzer.evaluate(*@straight_flush)[0]).to eql(:straight_flush)
     end
 
   end

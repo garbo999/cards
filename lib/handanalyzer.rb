@@ -12,7 +12,7 @@ class HandAnalyzer
       #b = Board.new(comb)
       i += 1
       win = winner(comb, hand1, hand2)
-      if win == true
+      if win == 1
         n += 1
       elsif win == nil
         ties += 1
@@ -23,14 +23,18 @@ class HandAnalyzer
   end
 
   def self.winner(board, hand1, hand2, game='Texas Holdem')
-    hand1_eval, hand1_high_card = @@hand_ranking[evaluate(board, hand1)]
-    hand2_eval, hand2_high_card = @@hand_ranking[evaluate(board, hand2)]
+    hand1_eval, hand1_high_card = evaluate(board, hand1)
+    hand2_eval, hand2_high_card = evaluate(board, hand2)
     if  hand1_eval > hand2_eval
-      return true
+      return 1
     elsif hand1_eval < hand2_eval 
-      return false
-    elsif hand1_high_card > hand2_high_card
-      return false
+      return 2
+    elsif hand1_high_card[0] > hand2_high_card[0]
+      return 1
+    elsif hand1_high_card[0] < hand2_high_card[0]
+      return 2
+    else
+      return 0
     end
   end
 
@@ -50,37 +54,36 @@ class HandAnalyzer
 
     h_rank = [0,0,0,0,0,0,0,0,0,0,0,0,0]
     h_suit = [0,0,0,0]
+    high_card = []
 
     cards.each do |c| 
       h_rank[c.rank_no] += 1
       h_suit[c.suit_no] += 1
     end
 
-
     is_straight = is_straight?(h_rank)
-
     is_flush = h_suit.max >= 5
 
     if is_flush and is_straight and straight_flush?(cards)
-      return :straight_flush
-    elsif h_rank.max == 4
-      return :four_of_a_kind
+      return :straight_flush, high_card
+    elsif h_rank.include?(4)
+      return :four_of_a_kind, [h_rank.index(4)]
     elsif h_rank.include?(3) and h_rank.include?(2)
-      return :fullhouse
+      return :fullhouse, [h_rank.index(3), [h_rank.index(2)]]
     elsif is_flush
-      return :flush
+      return :flush, high_card
     elsif is_straight
-      return :straight
+      return :straight, high_card
     elsif h_rank.max == 3
-      return :three_of_a_kind
+      return :three_of_a_kind, high_card
     elsif h_rank.max == 1
-      return :high_card
+      return :high_card, high_card
     elsif h_rank.count(2) == 2
-      return :two_pair
+      return :two_pair, high_card
     elsif h_rank.include?(2)
-      return :pair
+      return :pair, high_card
     else
-      return :high_card, h_rank.max
+      return :high_card, h_rank.sort
     end      
   end
 
