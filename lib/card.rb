@@ -2,7 +2,7 @@ class Card
   include Comparable
   attr_reader :rank_no, :suit_no
 
-  @@ranks = %w{A 2 3 4 5 6 7 8 9 10 J Q K}
+  @@ranks = %w{2 3 4 5 6 7 8 9 10 J Q K A}
   @@suits = %w{Spades Hearts Diamonds Clubs}
 
   def initialize(rank, suit)
