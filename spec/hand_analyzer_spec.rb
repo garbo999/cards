@@ -67,16 +67,16 @@ RSpec.describe HandAnalyzer do
         board = [Card.new("10", "Diamonds"), Card.new("3", "Diamonds"), Card.new("4", "Diamonds"), Card.new("A", "Hearts"), Card.new("K", "Spades")]
         hand1 = [Card.new("10", "Spades"), Card.new("10", "Hearts") ]
         hand2 = [Card.new("9", "Spades"), Card.new("9", "Hearts") ]
-        expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(true)
-        expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(false)
+        expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(1)
+        expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(2)
       end
 
       it 'says that a pair does not beat three of a kind' do
         board = [Card.new("2", "Diamonds"), Card.new("9", "Diamonds"), Card.new("4", "Diamonds"), Card.new("A", "Hearts"), Card.new("K", "Spades")]
         hand1 = [Card.new("10", "Spades"), Card.new("10", "Hearts") ]
         hand2 = [Card.new("9", "Spades"), Card.new("9", "Hearts") ]
-        expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(false)
-        expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(true)
+        expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(2)
+        expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(1)
       end
 
       xit 'shows some odds for higher vs lower pair' do 
@@ -94,43 +94,44 @@ RSpec.describe HandAnalyzer do
       board = [Card.new("10", "Diamonds"), Card.new("Q", "Diamonds"), Card.new("J", "Diamonds"), Card.new("A", "Hearts"), Card.new("K", "Diamonds")]
       hand1 = [Card.new("A", "Diamonds"), Card.new("10", "Hearts") ]
       hand2 = [Card.new("9", "Diamonds"), Card.new("2", "Diamonds") ]
-      expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(true)
-      expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(false)
+      expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(1)
+      expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(2)
       end
 
       it 'properly tie-breaks two four of a kinds' do # 4 Js vs 4 10s
       board = [Card.new("10", "Hearts"), Card.new("Q", "Diamonds"), Card.new("J", "Clubs"), Card.new("J", "Spades"), Card.new("10", "Clubs")]
       hand1 = [Card.new("J", "Diamonds"), Card.new("J", "Hearts") ]
       hand2 = [Card.new("10", "Diamonds"), Card.new("10", "Spades") ]
-      expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(true)
-      expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(false)
+      expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(1)
+      expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(2)
       end
 
       it 'properly tie-breaks two full houses' do # 3 Js + 2 8s vs 3 10s + 2 8s
       board = [Card.new("10", "Hearts"), Card.new("8", "Diamonds"), Card.new("J", "Clubs"), Card.new("8", "Spades"), Card.new("7", "Clubs")]
       hand1 = [Card.new("J", "Diamonds"), Card.new("J", "Hearts") ]
       hand2 = [Card.new("10", "Diamonds"), Card.new("10", "Spades") ]
-      expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(true)
-      expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(false)
+      expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(1)
+      expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(2)
       end
 
       it 'properly tie-breaks two full houses, 2nd test' do # 3 Js + 2 9s vs 3 Js + 2 8s
       board = [Card.new("J", "Hearts"), Card.new("2", "Diamonds"), Card.new("J", "Clubs"), Card.new("J", "Spades"), Card.new("7", "Clubs")]
       hand1 = [Card.new("9", "Diamonds"), Card.new("9", "Hearts") ]
       hand2 = [Card.new("8", "Diamonds"), Card.new("8", "Spades") ]
-      expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(true)
-      expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(false)
+      expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(1)
+      expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(2)
       end
 
-    xit 'shows some odds for higher vs lower pair' do 
-      board = []
-      hand1 = [Card.new("10", "Spades"), Card.new("10", "Hearts") ]
-      hand2 = [Card.new("9", "Spades"), Card.new("9", "Hearts") ]
-      expect(HandAnalyzer.show_odds(board, hand1, hand2)).to eql(0.8)
-      # expected: 0.8
-      # got: 0.8296634242517684
-    end
+      xit 'shows some odds for higher vs lower pair' do 
+        board = []
+        hand1 = [Card.new("10", "Spades"), Card.new("10", "Hearts") ]
+        hand2 = [Card.new("9", "Spades"), Card.new("9", "Hearts") ]
+        expect(HandAnalyzer.show_odds(board, hand1, hand2)).to eql(0.8)
+        # expected: 0.8
+        # got: 0.8296634242517684
+      end
 
+    end
   end
 
   context 'Evaluator Method' do
