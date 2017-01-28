@@ -98,7 +98,7 @@ RSpec.describe HandAnalyzer do
       expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(2)
       end
 
-      it 'properly tie-breaks two four of a kinds' do # 4 Js vs 4 10s
+      it 'properly tie-breaks two four of a kinds' do # 4 Jacks vs 4 tens
       board = [Card.new("10", "Hearts"), Card.new("Q", "Diamonds"), Card.new("J", "Clubs"), Card.new("J", "Spades"), Card.new("10", "Clubs")]
       hand1 = [Card.new("J", "Diamonds"), Card.new("J", "Hearts") ]
       hand2 = [Card.new("10", "Diamonds"), Card.new("10", "Spades") ]
@@ -106,7 +106,7 @@ RSpec.describe HandAnalyzer do
       expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(2)
       end
 
-      it 'properly tie-breaks two full houses' do # 3 Js + 2 8s vs 3 10s + 2 8s
+      it 'properly tie-breaks two full houses' do # 3 Jacks + 2 eights vs 3 tens + 2 eights
       board = [Card.new("10", "Hearts"), Card.new("8", "Diamonds"), Card.new("J", "Clubs"), Card.new("8", "Spades"), Card.new("7", "Clubs")]
       hand1 = [Card.new("J", "Diamonds"), Card.new("J", "Hearts") ]
       hand2 = [Card.new("10", "Diamonds"), Card.new("10", "Spades") ]
@@ -114,10 +114,26 @@ RSpec.describe HandAnalyzer do
       expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(2)
       end
 
-      it 'properly tie-breaks two full houses, 2nd test' do # 3 Js + 2 9s vs 3 Js + 2 8s
+      it 'properly tie-breaks two full houses, 2nd test' do # 3 Jacks + 2 nines vs 3 Jacks + 2 eights
       board = [Card.new("J", "Hearts"), Card.new("2", "Diamonds"), Card.new("J", "Clubs"), Card.new("J", "Spades"), Card.new("7", "Clubs")]
       hand1 = [Card.new("9", "Diamonds"), Card.new("9", "Hearts") ]
       hand2 = [Card.new("8", "Diamonds"), Card.new("8", "Spades") ]
+      expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(1)
+      expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(2)
+      end
+
+      it 'properly tie-breaks two flushes' do # Ac Qc 7c 5c 2c vs Kc Qc 7c 5c 2c
+      board = [Card.new("J", "Hearts"), Card.new("Q", "Clubs"), Card.new("7", "Clubs"), Card.new("5", "Clubs"), Card.new("2", "Clubs")]
+      hand1 = [Card.new("A", "Clubs"), Card.new("7", "Spades") ]
+      hand2 = [Card.new("K", "Clubs"), Card.new("8", "Spades") ]
+      expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(1)
+      expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(2)
+      end
+
+      it 'properly tie-breaks two straights' do # Ac Kd Qc Js 10h 2c vs Kc Qc Js 10h 9c
+      board = [Card.new("J", "Spades"), Card.new("Q", "Clubs"), Card.new("7", "Clubs"), Card.new("5", "Clubs"), Card.new("10", "Hearts")]
+      hand1 = [Card.new("A", "Clubs"), Card.new("K", "Diamonds") ]
+      hand2 = [Card.new("K", "Clubs"), Card.new("9", "Clubs") ]
       expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(1)
       expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(2)
       end
@@ -194,7 +210,7 @@ RSpec.describe HandAnalyzer do
       expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(1)
     end
 
-    it 'knows a pair 10s beats a pair of 9s' do
+    it 'knows a pair tens beats a pair of nines' do
       board = [Card.new("8", "Diamonds"), Card.new("3", "Diamonds"), Card.new("4", "Diamonds"), Card.new("A", "Hearts"), Card.new("K", "Spades")]
       hand1 = [Card.new("10", "Spades"), Card.new("10", "Hearts") ]
       hand2 = [Card.new("9", "Spades"), Card.new("9", "Hearts") ]
@@ -203,7 +219,7 @@ RSpec.describe HandAnalyzer do
     end
 
 
-    it 'knows a fullhouse with 10s beats a fullhouse with 9s' do
+    it 'knows a fullhouse with tens beats a fullhouse with nines' do
       board = [Card.new("10", "Diamonds"), Card.new("9", "Diamonds"), Card.new("A", "Diamonds"), Card.new("A", "Hearts"), Card.new("K", "Spades")]
       hand1 = [Card.new("10", "Spades"), Card.new("10", "Hearts") ]
       hand2 = [Card.new("9", "Spades"), Card.new("9", "Hearts") ]
