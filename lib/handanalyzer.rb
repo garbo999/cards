@@ -61,11 +61,11 @@ class HandAnalyzer
       h_suit[c.suit_no] += 1
     end
 
-    is_straight = is_straight?(h_rank)
+    is_straight, s_high_card = is_straight?(h_rank)
     is_flush = h_suit.max >= 5
 
-    if is_flush and is_straight and straight_flush?(cards)
-      return :straight_flush, high_card
+    if is_flush and is_straight and straight_flush?(cards)[0]
+      return :straight_flush, [straight_flush?(cards)[1]]
     elsif h_rank.include?(4)
       return :four_of_a_kind, [h_rank.index(4)]
     elsif h_rank.include?(3) and h_rank.include?(2)
@@ -73,13 +73,13 @@ class HandAnalyzer
     elsif is_flush
       return :flush, high_card
     elsif is_straight
-      return :straight, high_card
+      return :straight, [s_high_card]
     elsif h_rank.max == 3
-      return :three_of_a_kind, high_card
+      return :three_of_a_kind, [h_rank.index(3)]
     elsif h_rank.max == 1
-      return :high_card, high_card
+      return :high_card, [12-h_rank.reverse.index(1)]
     elsif h_rank.count(2) == 2
-      return :two_pair, high_card
+      return :two_pair, [12-h_rank.reverse.index(2), h_rank.index(2)]
     elsif h_rank.include?(2)
       return :pair, [h_rank.index(2)]
     else
@@ -96,26 +96,27 @@ private
       h[c.suit_no][c.rank_no]  += 1
     end
     h.each do |x|
-      return true if is_straight?(x)
+      straight, high_card = is_straight?(x)[0]
+      return straight, high_card  if straight
     end
   end
 
   def self.is_straight?(cards) # ACE = 1 or 14!!!
     c=0
-    cards.each do |x|
-      if x > 0 then
+    cards.each_index do |x|
+      if cards[x] > 0 then
         c+=1
         if c==5 then
-          return true
+          return true, x
         end
       else
         c=0
       end
     end
     if cards[0] > 0 and cards[1] > 0 and cards[2] > 0 and cards[3] > 0 and cards[12] > 0
-      return true
+      return true, 3
     else
-      return false
+      return false, nil
     end
   end
 
