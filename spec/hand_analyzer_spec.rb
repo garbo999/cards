@@ -122,27 +122,18 @@ RSpec.describe HandAnalyzer do
       expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(false)
       end
 
-    it 'says that three of a kind beats one pair' do
-      board = [Card.new("10", "Diamonds"), Card.new("3", "Diamonds"), Card.new("4", "Diamonds"), Card.new("A", "Hearts"), Card.new("K", "Spades")]
+    xit 'shows some odds for higher vs lower pair' do 
+      board = []
       hand1 = [Card.new("10", "Spades"), Card.new("10", "Hearts") ]
       hand2 = [Card.new("9", "Spades"), Card.new("9", "Hearts") ]
-      expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(1)
-      expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(2)
-    end
-
-    it 'says that a pair does not beat three of a kind' do
-      board = [Card.new("2", "Diamonds"), Card.new("9", "Diamonds"), Card.new("4", "Diamonds"), Card.new("A", "Hearts"), Card.new("K", "Spades")]
-      hand1 = [Card.new("10", "Spades"), Card.new("10", "Hearts") ]
-      hand2 = [Card.new("9", "Spades"), Card.new("9", "Hearts") ]
-      expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(2)
-      expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(1)
-    end
-
+      expect(HandAnalyzer.show_odds(board, hand1, hand2)).to eql(0.8)
+      # expected: 0.8
+      # got: 0.8296634242517684
     end
 
   end
 
-  context 'evaluator' do
+  context 'Evaluator Method' do
     it 'responds to the class method :evaluate' do
       expect(HandAnalyzer).to respond_to(:evaluate)
     end
@@ -182,9 +173,37 @@ RSpec.describe HandAnalyzer do
     it 'recognises a straight flush' do
       expect(HandAnalyzer.evaluate(*@straight_flush)[0]).to eql(:straight_flush)
     end
+  end
+
+  context 'Winner method' do
+
+    it 'says that three of a kind beats one pair' do
+      board = [Card.new("10", "Diamonds"), Card.new("3", "Diamonds"), Card.new("4", "Diamonds"), Card.new("A", "Hearts"), Card.new("K", "Spades")]
+      hand1 = [Card.new("10", "Spades"), Card.new("10", "Hearts") ]
+      hand2 = [Card.new("9", "Spades"), Card.new("9", "Hearts") ]
+      expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(1)
+      expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(2)
+    end
+
+    it 'says that a pair does not beat three of a kind' do
+      board = [Card.new("2", "Diamonds"), Card.new("9", "Diamonds"), Card.new("4", "Diamonds"), Card.new("A", "Hearts"), Card.new("K", "Spades")]
+      hand1 = [Card.new("10", "Spades"), Card.new("10", "Hearts") ]
+      hand2 = [Card.new("9", "Spades"), Card.new("9", "Hearts") ]
+      expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(2)
+      expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(1)
+    end
 
     it 'knows a pair 10s beats a pair of 9s' do
       board = [Card.new("8", "Diamonds"), Card.new("3", "Diamonds"), Card.new("4", "Diamonds"), Card.new("A", "Hearts"), Card.new("K", "Spades")]
+      hand1 = [Card.new("10", "Spades"), Card.new("10", "Hearts") ]
+      hand2 = [Card.new("9", "Spades"), Card.new("9", "Hearts") ]
+      expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(1)
+      expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(2)
+    end
+
+
+    it 'knows a fullhouse with 10s beats a fullhouse with 9s' do
+      board = [Card.new("10", "Diamonds"), Card.new("9", "Diamonds"), Card.new("A", "Diamonds"), Card.new("A", "Hearts"), Card.new("K", "Spades")]
       hand1 = [Card.new("10", "Spades"), Card.new("10", "Hearts") ]
       hand2 = [Card.new("9", "Spades"), Card.new("9", "Hearts") ]
       expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(1)
