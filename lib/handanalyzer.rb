@@ -110,6 +110,18 @@ private
     end
   end
 
+  def self.flush_high_card?(cards)
+    # check 21 combinations = 7 taken 5 times
+    h = [[0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0]]
+    cards.each do |c| 
+      h[c.suit_no][c.rank_no]  += 1
+    end
+    h.each do |x|
+      straight, high_card = is_straight?(x)
+      return high_card
+    end
+  end
+
   def self.is_straight?(cards) # ACE = 1 or 14!!!
     c=0
     cards.each_index do |x|
