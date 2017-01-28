@@ -114,6 +114,7 @@ RSpec.describe HandAnalyzer do
       expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(false)
       end
 
+<<<<<<< HEAD
       it 'properly tie-breaks two full houses, 2nd test' do # 3 Js + 2 9s vs 3 Js + 2 8s
       board = [Card.new("J", "Hearts"), Card.new("2", "Diamonds"), Card.new("J", "Clubs"), Card.new("J", "Spades"), Card.new("7", "Clubs")]
       hand1 = [Card.new("9", "Diamonds"), Card.new("9", "Hearts") ]
@@ -122,6 +123,7 @@ RSpec.describe HandAnalyzer do
       expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(false)
       end
 
+=======
     it 'says that three of a kind beats one pair' do
       board = [Card.new("10", "Diamonds"), Card.new("3", "Diamonds"), Card.new("4", "Diamonds"), Card.new("A", "Hearts"), Card.new("K", "Spades")]
       hand1 = [Card.new("10", "Spades"), Card.new("10", "Hearts") ]
@@ -137,6 +139,7 @@ RSpec.describe HandAnalyzer do
       expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(2)
       expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(1)
     end
+>>>>>>> 9c33ee86b05e9660f9fab99e03b533ab3b8299b9
 
     end
 
