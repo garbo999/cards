@@ -86,8 +86,8 @@ class HandAnalyzer
     elsif h_rank.include?(3) and h_rank.include?(2)
       return :fullhouse, [h_rank.index(3), h_rank.index(2)]
     elsif is_flush
-      high_card = flush_high_card(cards)
-      return :flush, high_card
+      high_card = flush_high_card(cards, h_suit.index(h_suit.max))
+      return :flush, [high_card]
     elsif is_straight
       return :straight, [s_high_card]
     elsif h_rank.max == 3
@@ -117,16 +117,13 @@ private
     end
   end
 
-  def self.flush_high_card(cards)
+  def self.flush_high_card(cards, suit_no)
     # check 21 combinations = 7 taken 5 times
     h = [[0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0]]
     cards.each do |c| 
       h[c.suit_no][c.rank_no]  += 1
     end
-    h.each do |x|
-      straight, high_card = is_straight?(x)
-      return high_card
-    end
+    return 12-h[suit_no].reverse.index(1)
   end
 
   def self.is_straight?(cards) # ACE = 1 or 14!!!
