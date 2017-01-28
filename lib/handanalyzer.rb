@@ -23,11 +23,13 @@ class HandAnalyzer
   end
 
   def self.winner(board, hand1, hand2, game='Texas Holdem')
-    if @@hand_ranking[evaluate(board, hand1)] > @@hand_ranking[evaluate(board, hand2)]
+    hand1_eval, hand1_high_card = @@hand_ranking[evaluate(board, hand1)]
+    hand2_eval, hand2_high_card = @@hand_ranking[evaluate(board, hand2)]
+    if  hand1_eval > hand2_eval
       return true
-    elsif @@hand_ranking[evaluate(board, hand1)] == @@hand_ranking[evaluate(board, hand2)]
-      return nil
-    else
+    elsif hand1_eval < hand2_eval 
+      return false
+    elsif hand1_high_card > hand2_high_card
       return false
     end
   end
@@ -78,7 +80,7 @@ class HandAnalyzer
     elsif h_rank.include?(2)
       return :pair
     else
-      return :high_card
+      return :high_card, h_rank.max
     end      
   end
 
