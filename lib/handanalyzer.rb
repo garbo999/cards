@@ -81,7 +81,7 @@ class HandAnalyzer
     elsif h_rank.count(2) == 2
       return :two_pair, high_card
     elsif h_rank.include?(2)
-      return :pair, high_card
+      return :pair, [h_rank.index(2)]
     else
       return :high_card, h_rank.sort
     end      

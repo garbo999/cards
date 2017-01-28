@@ -123,8 +123,17 @@ RSpec.describe HandAnalyzer do
     it 'recognises a four of a kind' do
       expect(HandAnalyzer.evaluate(*@four_of_a_kind)[0]).to eql(:four_of_a_kind)
     end
+
     it 'recognises a straight flush' do
       expect(HandAnalyzer.evaluate(*@straight_flush)[0]).to eql(:straight_flush)
+    end
+
+    it 'knows a pair 10s beats a pair of 9s' do
+      board = [Card.new("8", "Diamonds"), Card.new("3", "Diamonds"), Card.new("4", "Diamonds"), Card.new("A", "Hearts"), Card.new("K", "Spades")]
+      hand1 = [Card.new("10", "Spades"), Card.new("10", "Hearts") ]
+      hand2 = [Card.new("9", "Spades"), Card.new("9", "Hearts") ]
+      expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(1)
+      expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(2)
     end
 
   end
