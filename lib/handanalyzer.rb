@@ -34,6 +34,13 @@ class HandAnalyzer
     elsif hand1_high_card[0] < hand2_high_card[0]
       return 2
     else
+      if !hand1_high_card[1].nil? and !hand1_high_card[1].nil? then
+        if hand1_high_card[1] > hand2_high_card[1]
+          return 1
+        elsif hand1_high_card[1] < hand2_high_card[1]
+          return 2
+        end
+      end
       return 0
     end
   end
@@ -71,7 +78,7 @@ class HandAnalyzer
     if h_rank.include?(4)
       return :four_of_a_kind, [h_rank.index(4)]
     elsif h_rank.include?(3) and h_rank.include?(2)
-      return :fullhouse, [h_rank.index(3), [h_rank.index(2)]]
+      return :fullhouse, [h_rank.index(3), h_rank.index(2)]
     elsif is_flush
       return :flush, high_card
     elsif is_straight
