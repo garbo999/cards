@@ -130,10 +130,34 @@ RSpec.describe HandAnalyzer do
       expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(2)
       end
 
-      it 'properly tie-breaks two straights' do # Ac Kd Qc Js 10h 2c vs Kc Qc Js 10h 9c
+      it 'properly tie-breaks two straights' do # Ac Kd Qc Js 10h vs Kc Qc Js 10h 9c
       board = [Card.new("J", "Spades"), Card.new("Q", "Clubs"), Card.new("7", "Clubs"), Card.new("5", "Clubs"), Card.new("10", "Hearts")]
       hand1 = [Card.new("A", "Clubs"), Card.new("K", "Diamonds") ]
-      hand2 = [Card.new("K", "Clubs"), Card.new("9", "Clubs") ]
+      hand2 = [Card.new("K", "Clubs"), Card.new("9", "Spades") ]
+      expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(1)
+      expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(2)
+      end
+
+      it 'properly tie-breaks three of a kind' do # 3c 3d 3s 10h 7c vs 2c 2s 2h 10h 7c
+      board = [Card.new("3", "Clubs"), Card.new("2", "Spades"), Card.new("7", "Clubs"), Card.new("5", "Hearts"), Card.new("10", "Hearts")]
+      hand1 = [Card.new("3", "Spades"), Card.new("3", "Diamonds") ]
+      hand2 = [Card.new("2", "Clubs"), Card.new("2", "Hearts") ]
+      expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(1)
+      expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(2)
+      end
+
+      it 'properly tie-breaks two pair' do # 3s 3d Ks 10h 7c vs 2c 2s Ah 10h 7c
+      board = [Card.new("3", "Spades"), Card.new("2", "Spades"), Card.new("7", "Clubs"), Card.new("5", "Hearts"), Card.new("10", "Hearts")]
+      hand1 = [Card.new("K", "Spades"), Card.new("3", "Diamonds") ]
+      hand2 = [Card.new("2", "Clubs"), Card.new("A", "Hearts") ]
+      expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(1)
+      expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(2)
+      end
+
+      it 'properly tie-breaks two pair, 2nd test (one kicker)' do # 3s 3d Ks 10h 7c vs 3s 3h Qh 10h 7c
+      board = [Card.new("3", "Spades"), Card.new("2", "Spades"), Card.new("7", "Clubs"), Card.new("5", "Hearts"), Card.new("10", "Hearts")]
+      hand1 = [Card.new("K", "Spades"), Card.new("3", "Diamonds") ]
+      hand2 = [Card.new("3", "Hearts"), Card.new("Q", "Hearts") ]
       expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(1)
       expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(2)
       end
