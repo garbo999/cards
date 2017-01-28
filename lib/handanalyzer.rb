@@ -64,9 +64,11 @@ class HandAnalyzer
     is_straight, s_high_card = is_straight?(h_rank)
     is_flush = h_suit.max >= 5
 
-    if is_flush and is_straight and straight_flush?(cards)[0]
-      return :straight_flush, [straight_flush?(cards)[1]]
-    elsif h_rank.include?(4)
+    if is_flush and is_straight
+      straight_flush, high_card = straight_flush?(cards) 
+      return :straight_flush, [high_card] if straight_flush
+    end
+    if h_rank.include?(4)
       return :four_of_a_kind, [h_rank.index(4)]
     elsif h_rank.include?(3) and h_rank.include?(2)
       return :fullhouse, [h_rank.index(3), [h_rank.index(2)]]
@@ -96,8 +98,8 @@ private
       h[c.suit_no][c.rank_no]  += 1
     end
     h.each do |x|
-      straight, high_card = is_straight?(x)[0]
-      return straight, high_card  if straight
+      straight, high_card = is_straight?(x)
+      return straight, high_card if straight
     end
   end
 
