@@ -41,6 +41,13 @@ class HandAnalyzer
           return 2
         end
       end
+      if !hand1_high_card[2].nil? and !hand1_high_card[2].nil? then
+        if hand1_high_card[2] > hand2_high_card[2]
+          return 1
+        elsif hand1_high_card[2] < hand2_high_card[2]
+          return 2
+        end
+      end
       return 0
     end
   end
@@ -61,7 +68,6 @@ class HandAnalyzer
 
     h_rank = [0,0,0,0,0,0,0,0,0,0,0,0,0]
     h_suit = [0,0,0,0]
-    high_card = []
 
     cards.each do |c| 
       h_rank[c.rank_no] += 1
@@ -80,6 +86,7 @@ class HandAnalyzer
     elsif h_rank.include?(3) and h_rank.include?(2)
       return :fullhouse, [h_rank.index(3), h_rank.index(2)]
     elsif is_flush
+      high_card = flush_high_card(cards)
       return :flush, high_card
     elsif is_straight
       return :straight, [s_high_card]
@@ -88,9 +95,9 @@ class HandAnalyzer
     elsif h_rank.max == 1
       return :high_card, [12-h_rank.reverse.index(1)]
     elsif h_rank.count(2) == 2
-      return :two_pair, [12-h_rank.reverse.index(2), h_rank.index(2)]
+      return :two_pair, [12-h_rank.reverse.index(2), h_rank.index(2), 12-h_rank.reverse.index(1)]
     elsif h_rank.include?(2)
-      return :pair, [h_rank.index(2)]
+      return :pair, [h_rank.index(2), 12-h_rank.reverse.index(1)]
     else
       return :high_card, h_rank.sort
     end      
@@ -110,7 +117,7 @@ private
     end
   end
 
-  def self.flush_high_card?(cards)
+  def self.flush_high_card(cards)
     # check 21 combinations = 7 taken 5 times
     h = [[0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0]]
     cards.each do |c| 
