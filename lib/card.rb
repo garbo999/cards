@@ -1,4 +1,4 @@
-class Card
+class PlayingCard
   include Comparable
   attr_reader :rank_no, :suit_no
 

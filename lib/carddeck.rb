@@ -11,7 +11,7 @@ class CardDeck
     @deck_of_cards = Array.new
     @@suits.each do |suit|
       @@ranks.each do |rank|
-        @deck_of_cards << Card.new(rank, suit)
+        @deck_of_cards << PlayingCard.new(rank, suit)
       end
     end
   end
