@@ -4,13 +4,10 @@ end
 class CardDeck
   attr_reader :deck_of_cards
    
-  @@ranks = %w{2 3 4 5 6 7 8 9 10 J Q K A}
-  @@suits = %w{Spades Hearts Diamonds Clubs}
-
   def initialize
     @deck_of_cards = Array.new
-    @@suits.each do |suit|
-      @@ranks.each do |rank|
+    PlayingCard::SUITS.each do |suit|
+      PlayingCard::RANKS.each do |rank|
         @deck_of_cards << PlayingCard.new(rank, suit)
       end
     end

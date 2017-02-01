@@ -1,7 +1,5 @@
 class HandAnalyzer
 
-  @@hand_ranking = {high_card: 0, pair: 1, two_pair: 2, three_of_a_kind: 3, straight: 4, flush: 5, fullhouse: 6, four_of_a_kind: 7, straight_flush: 8}
-
   def self.show_odds(board, hand1, hand2, game='Texas Holdem')
     cd = CardDeck.new
     cd.deal_specific(hand1[0], hand1[1], hand2[0], hand2[1])
