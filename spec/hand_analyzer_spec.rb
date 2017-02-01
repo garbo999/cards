@@ -44,25 +44,77 @@ RSpec.describe HandAnalyzer do
 
   end
 
-  context 'odds' do
-    context 'basic stuff' do
-      it 'responds to the class method :show_odds' do
-        expect(HandAnalyzer).to respond_to(:show_odds)
-      end
-
-      it 'responds to the class method :winner' do
-        expect(HandAnalyzer).to respond_to(:winner)
-      end
-
-      it 'tells us how many combinations there are' do
-        board = []
-        hand1 = [PlayingCard.new("10", "Spades"), PlayingCard.new("10", "Hearts") ]
-        hand2 = [PlayingCard.new("9", "Spades"), PlayingCard.new("9", "Hearts") ]
-        expect(HandAnalyzer.count_combinations(board, hand1, hand2)).to eql(1712304)
-      end
+  context 'basic stuff' do
+    it 'responds to the class method :show_odds' do
+      expect(HandAnalyzer).to respond_to(:show_odds)
     end
 
-    context 'ordinary #winner handling' do
+    it 'responds to the class method :winner' do
+      expect(HandAnalyzer).to respond_to(:winner)
+    end
+
+    it 'responds to the class method :evaluate' do
+      expect(HandAnalyzer).to respond_to(:evaluate)
+    end
+
+   it 'tells us how many combinations there are' do
+      board = []
+      hand1 = [PlayingCard.new("10", "Spades"), PlayingCard.new("10", "Hearts") ]
+      hand2 = [PlayingCard.new("9", "Spades"), PlayingCard.new("9", "Hearts") ]
+      expect(HandAnalyzer.count_combinations(board, hand1, hand2)).to eql(1712304)
+    end
+
+    xit 'shows some odds for higher vs lower pair' do 
+      board = []
+      hand1 = [PlayingCard.new("10", "Spades"), PlayingCard.new("10", "Hearts") ]
+      hand2 = [PlayingCard.new("9", "Spades"), PlayingCard.new("9", "Hearts") ]
+      expect(HandAnalyzer.show_odds(board, hand1, hand2)).to eql(0.8)
+      # expected: 0.8
+      # got: 0.8296634242517684
+    end
+  end
+
+  context '#evaluate method' do
+    it 'recognises a high card' do
+      expect(HandAnalyzer.evaluate(*@high_card)[0]).to eql(:high_card)
+    end
+
+    it 'recognises a pair' do
+      expect(HandAnalyzer.evaluate(*@one_pair)[0]).to eql(:pair)
+    end
+
+    it 'recognises a two pair' do
+      expect(HandAnalyzer.evaluate(*@two_pair)[0]).to eql(:two_pair)
+    end
+
+    it 'recognises a three of a kind' do
+      expect(HandAnalyzer.evaluate(*@three_of_a_kind)[0]).to eql(:three_of_a_kind)
+    end
+
+    it 'recognises a straight' do
+      expect(HandAnalyzer.evaluate(*@straight)[0]).to eql(:straight)
+    end
+    it 'recognises a straight that starts with an Ace' do
+      expect(HandAnalyzer.evaluate(*@straight_with_ace)[0]).to eql(:straight)
+    end
+    it 'recognises a flush' do
+      expect(HandAnalyzer.evaluate(*@flush)[0]).to eql(:flush)
+    end
+    it 'recognises a full house' do
+      expect(HandAnalyzer.evaluate(*@fullhouse)[0]).to eql(:fullhouse)
+    end
+    it 'recognises a four of a kind' do
+      expect(HandAnalyzer.evaluate(*@four_of_a_kind)[0]).to eql(:four_of_a_kind)
+    end
+
+    it 'recognises a straight flush' do
+      expect(HandAnalyzer.evaluate(*@straight_flush)[0]).to eql(:straight_flush)
+    end
+  end
+
+  context '#winner method' do
+
+    context 'ordinary winners' do
       it 'says that three of a kind beats one pair' do
         board = [PlayingCard.new("10", "Diamonds"), PlayingCard.new("3", "Diamonds"), PlayingCard.new("4", "Diamonds"), PlayingCard.new("A", "Hearts"), PlayingCard.new("K", "Spades")]
         hand1 = [PlayingCard.new("10", "Spades"), PlayingCard.new("10", "Hearts") ]
@@ -79,17 +131,25 @@ RSpec.describe HandAnalyzer do
         expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(1)
       end
 
-      xit 'shows some odds for higher vs lower pair' do 
-        board = []
+      it 'knows a pair tens beats a pair of nines' do
+        board = [PlayingCard.new("8", "Diamonds"), PlayingCard.new("3", "Diamonds"), PlayingCard.new("4", "Diamonds"), PlayingCard.new("A", "Hearts"), PlayingCard.new("K", "Spades")]
         hand1 = [PlayingCard.new("10", "Spades"), PlayingCard.new("10", "Hearts") ]
         hand2 = [PlayingCard.new("9", "Spades"), PlayingCard.new("9", "Hearts") ]
-        expect(HandAnalyzer.show_odds(board, hand1, hand2)).to eql(0.8)
-        # expected: 0.8
-        # got: 0.8296634242517684
+        expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(1)
+        expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(2)
       end
+
+      it 'knows a fullhouse with tens beats a fullhouse with nines' do
+        board = [PlayingCard.new("10", "Diamonds"), PlayingCard.new("9", "Diamonds"), PlayingCard.new("A", "Diamonds"), PlayingCard.new("A", "Hearts"), PlayingCard.new("K", "Spades")]
+        hand1 = [PlayingCard.new("10", "Spades"), PlayingCard.new("10", "Hearts") ]
+        hand2 = [PlayingCard.new("9", "Spades"), PlayingCard.new("9", "Hearts") ]
+        expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(1)
+        expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(2)
+      end
+
     end
 
-    context 'tie breaks by #winner' do
+    context 'tie breaks' do
       it 'properly tie-breaks two straight flushes' do # A high straight flush (royal flush) vs K high straight flush
       board = [PlayingCard.new("10", "Diamonds"), PlayingCard.new("Q", "Diamonds"), PlayingCard.new("J", "Diamonds"), PlayingCard.new("A", "Hearts"), PlayingCard.new("K", "Diamonds")]
       hand1 = [PlayingCard.new("A", "Diamonds"), PlayingCard.new("10", "Hearts") ]
@@ -202,93 +262,6 @@ RSpec.describe HandAnalyzer do
       expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(0)
       end
 
-      xit 'shows some odds for higher vs lower pair' do 
-        board = []
-        hand1 = [PlayingCard.new("10", "Spades"), PlayingCard.new("10", "Hearts") ]
-        hand2 = [PlayingCard.new("9", "Spades"), PlayingCard.new("9", "Hearts") ]
-        expect(HandAnalyzer.show_odds(board, hand1, hand2)).to eql(0.8)
-        # expected: 0.8
-        # got: 0.8296634242517684
-      end
-
-    end
-  end
-
-  context 'Evaluator Method' do
-    it 'responds to the class method :evaluate' do
-      expect(HandAnalyzer).to respond_to(:evaluate)
-    end
-
-    it 'recognises a high card' do
-      expect(HandAnalyzer.evaluate(*@high_card)[0]).to eql(:high_card)
-    end
-
-    it 'recognises a pair' do
-      expect(HandAnalyzer.evaluate(*@one_pair)[0]).to eql(:pair)
-    end
-
-    it 'recognises a two pair' do
-      expect(HandAnalyzer.evaluate(*@two_pair)[0]).to eql(:two_pair)
-    end
-
-    it 'recognises a three of a kind' do
-      expect(HandAnalyzer.evaluate(*@three_of_a_kind)[0]).to eql(:three_of_a_kind)
-    end
-
-    it 'recognises a straight' do
-      expect(HandAnalyzer.evaluate(*@straight)[0]).to eql(:straight)
-    end
-    it 'recognises a straight that starts with an Ace' do
-      expect(HandAnalyzer.evaluate(*@straight_with_ace)[0]).to eql(:straight)
-    end
-    it 'recognises a flush' do
-      expect(HandAnalyzer.evaluate(*@flush)[0]).to eql(:flush)
-    end
-    it 'recognises a full house' do
-      expect(HandAnalyzer.evaluate(*@fullhouse)[0]).to eql(:fullhouse)
-    end
-    it 'recognises a four of a kind' do
-      expect(HandAnalyzer.evaluate(*@four_of_a_kind)[0]).to eql(:four_of_a_kind)
-    end
-
-    it 'recognises a straight flush' do
-      expect(HandAnalyzer.evaluate(*@straight_flush)[0]).to eql(:straight_flush)
-    end
-  end
-
-  context 'Winner method' do
-
-    it 'says that three of a kind beats one pair' do
-      board = [PlayingCard.new("10", "Diamonds"), PlayingCard.new("3", "Diamonds"), PlayingCard.new("4", "Diamonds"), PlayingCard.new("A", "Hearts"), PlayingCard.new("K", "Spades")]
-      hand1 = [PlayingCard.new("10", "Spades"), PlayingCard.new("10", "Hearts") ]
-      hand2 = [PlayingCard.new("9", "Spades"), PlayingCard.new("9", "Hearts") ]
-      expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(1)
-      expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(2)
-    end
-
-    it 'says that a pair does not beat three of a kind' do
-      board = [PlayingCard.new("2", "Diamonds"), PlayingCard.new("9", "Diamonds"), PlayingCard.new("4", "Diamonds"), PlayingCard.new("A", "Hearts"), PlayingCard.new("K", "Spades")]
-      hand1 = [PlayingCard.new("10", "Spades"), PlayingCard.new("10", "Hearts") ]
-      hand2 = [PlayingCard.new("9", "Spades"), PlayingCard.new("9", "Hearts") ]
-      expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(2)
-      expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(1)
-    end
-
-    it 'knows a pair tens beats a pair of nines' do
-      board = [PlayingCard.new("8", "Diamonds"), PlayingCard.new("3", "Diamonds"), PlayingCard.new("4", "Diamonds"), PlayingCard.new("A", "Hearts"), PlayingCard.new("K", "Spades")]
-      hand1 = [PlayingCard.new("10", "Spades"), PlayingCard.new("10", "Hearts") ]
-      hand2 = [PlayingCard.new("9", "Spades"), PlayingCard.new("9", "Hearts") ]
-      expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(1)
-      expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(2)
-    end
-
-
-    it 'knows a fullhouse with tens beats a fullhouse with nines' do
-      board = [PlayingCard.new("10", "Diamonds"), PlayingCard.new("9", "Diamonds"), PlayingCard.new("A", "Diamonds"), PlayingCard.new("A", "Hearts"), PlayingCard.new("K", "Spades")]
-      hand1 = [PlayingCard.new("10", "Spades"), PlayingCard.new("10", "Hearts") ]
-      hand2 = [PlayingCard.new("9", "Spades"), PlayingCard.new("9", "Hearts") ]
-      expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(1)
-      expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(2)
     end
 
   end
