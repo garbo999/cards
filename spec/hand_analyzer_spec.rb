@@ -186,6 +186,14 @@ RSpec.describe HandAnalyzer do
       expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(2)
       end
 
+      it 'properly tie-breaks one pair, 3rd test' do # "As 8s Ts 2h 9s" vs "As 8s Qh Td 9h"
+      board = []
+      hand1 = [PlayingCard.new("A", "Spades"), PlayingCard.new("8", "Spades"), PlayingCard.new("10", "Spades"), PlayingCard.new("2", "Hearts"), PlayingCard.new("9", "Spades") ]
+      hand2 = [PlayingCard.new("A", "Hearts"), PlayingCard.new("8", "Hearts"), PlayingCard.new("Q", "Hearts"), PlayingCard.new("10", "Diamonds"), PlayingCard.new("9", "Hearts") ]
+      expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(2)
+      expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(1)
+      end
+
       it 'properly tie-breaks one pair, 3rd test (actual tie)' do # 3s 3d Ks 10h 7c vs 3s 3h Kh 10h 7c 
       board = [PlayingCard.new("3", "Spades"), PlayingCard.new("2", "Spades"), PlayingCard.new("7", "Clubs"), PlayingCard.new("5", "Hearts"), PlayingCard.new("10", "Hearts")]
       hand1 = [PlayingCard.new("K", "Spades"), PlayingCard.new("3", "Diamonds") ]
