@@ -1,4 +1,4 @@
-# This 2nd stress test generates random PAIRS of hands and compares the evaluation of the WINNER (our result vs. the ruby-poker gem).
+# The 2nd stress test generates random PAIRS of hands and compares the evaluation of the WINNER (our result vs. the ruby-poker gem).
 #
 
 require 'rubygems'
@@ -10,7 +10,7 @@ require "./lib/handanalyzer.rb"
 
 PokerHand.allow_duplicates = false
 
-def result_convert(hand_1, hand_2)
+def convert_result_from_ruby_poker(hand_1, hand_2)
   if hand_1 > hand_2
     return 1
   elsif hand_1 < hand_2
@@ -57,14 +57,18 @@ while true do
       suits_index_1 = (0..3).to_a.sample
       card_1 = RANKS[ranks_index_1] + SUITS[suits_index_1]
       #puts card
-      break if !hand_1.include?(card_1)
+      if !hand_1.include?(card_1)
+        break 
+      end
     end 
     loop do # generate non-duplicate card for hand_2
       ranks_index_2 = (0..12).to_a.sample
       suits_index_2 = (0..3).to_a.sample
       card_2 = RANKS[ranks_index_2] + SUITS[suits_index_2]
       #puts card
-      break if !hand_2.include?(card_2) and !hand_1.include?(card_2) # don't allow duplicate cards between hands
+      if (!hand_2.include?(card_2) and !hand_1.include?(card_2)) # don't allow duplicate cards between hands
+        break
+      end
     end 
     hand_1 << card_1
     hand_2 << card_2
@@ -75,6 +79,7 @@ while true do
     #p hand_1
   end
 
+  puts "evaluating hand no. #{i}"
   # build evaluate the randomly generate hands with gem vs. our HandAnalyzer and compare results
   hand_1 = PokerHand.new(hand_1)
   hand_2 = PokerHand.new(hand_2)
@@ -82,11 +87,11 @@ while true do
   #test_comparison = RANKING_CONVERSION[hand_1.rank] == our_ranking[0].to_s
 
 
-  if HandAnalyzer.winner([], hand_1_ours, hand_2_ours) != result_convert(hand_1, hand_2)
+  if HandAnalyzer.winner([], hand_1_ours, hand_2_ours) != convert_result_from_ruby_poker(hand_1, hand_2)
     p hand_1.just_cards
     p hand_2.just_cards
     p "our result = " + HandAnalyzer.winner([], hand_1_ours, hand_2_ours).to_s
-    p "their result = " + result_convert(hand_1, hand_2).to_s
+    p "their result = " + convert_result_from_ruby_poker(hand_1, hand_2).to_s
     break
   end
 =begin

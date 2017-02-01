@@ -131,6 +131,20 @@ RSpec.describe HandAnalyzer do
         expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(1)
       end
 
+=begin
+"3d Js Jc 3s 4s"
+"As Ac Ad 6h Kc"
+"our result = 1"
+"their result = 2"
+=end
+      it 'says that a pair does not beat three of a kind, 2nd test' do
+        board = []
+        hand1 = [PlayingCard.new("3", "Diamonds"), PlayingCard.new("J", "Spades"), PlayingCard.new("J", "Clubs"), PlayingCard.new("3", "Spades"), PlayingCard.new("4", "Spades")]
+        hand2 = [PlayingCard.new("A", "Spades"), PlayingCard.new("A", "Clubs"), PlayingCard.new("A", "Diamonds"), PlayingCard.new("6", "Hearts"), PlayingCard.new("K", "Clubs")]
+        expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(2)
+        expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(1)
+      end
+
       it 'knows a pair tens beats a pair of nines' do
         board = [PlayingCard.new("8", "Diamonds"), PlayingCard.new("3", "Diamonds"), PlayingCard.new("4", "Diamonds"), PlayingCard.new("A", "Hearts"), PlayingCard.new("K", "Spades")]
         hand1 = [PlayingCard.new("10", "Spades"), PlayingCard.new("10", "Hearts") ]
@@ -147,6 +161,19 @@ RSpec.describe HandAnalyzer do
         expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(2)
       end
 
+=begin
+"9s Ac 8d Qh 6s"
+"5d 3h 5c 5s 3s"
+"our result = 1"
+"their result = 2"
+=end
+      it 'knows a fullhouse beats Ace high card' do
+        board = []
+        hand1 = [PlayingCard.new("9", "Spades"), PlayingCard.new("A", "Clubs"), PlayingCard.new("8", "Diamonds"), PlayingCard.new("Q", "Hearts"), PlayingCard.new("6", "Spades")  ]
+        hand2 = [PlayingCard.new("5", "Diamonds"), PlayingCard.new("3", "Hearts"), PlayingCard.new("5", "Clubs"), PlayingCard.new("5", "Spades"), PlayingCard.new("3", "Spades") ]
+        expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(2)
+        expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(1)
+      end
     end
 
     context 'tie breaks' do
@@ -246,14 +273,6 @@ RSpec.describe HandAnalyzer do
       expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(2)
       end
 
-      it 'properly tie-breaks one pair, 3rd test' do # "As 8s Ts 2h 9s" vs "As 8s Qh Td 9h"
-      board = []
-      hand1 = [PlayingCard.new("A", "Spades"), PlayingCard.new("8", "Spades"), PlayingCard.new("10", "Spades"), PlayingCard.new("2", "Hearts"), PlayingCard.new("9", "Spades") ]
-      hand2 = [PlayingCard.new("A", "Hearts"), PlayingCard.new("8", "Hearts"), PlayingCard.new("Q", "Hearts"), PlayingCard.new("10", "Diamonds"), PlayingCard.new("9", "Hearts") ]
-      expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(2)
-      expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(1)
-      end
-
       it 'properly tie-breaks one pair, 3rd test (actual tie)' do # 3s 3d Ks 10h 7c vs 3s 3h Kh 10h 7c 
       board = [PlayingCard.new("3", "Spades"), PlayingCard.new("2", "Spades"), PlayingCard.new("7", "Clubs"), PlayingCard.new("5", "Hearts"), PlayingCard.new("10", "Hearts")]
       hand1 = [PlayingCard.new("K", "Spades"), PlayingCard.new("3", "Diamonds") ]
@@ -261,6 +280,40 @@ RSpec.describe HandAnalyzer do
       expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(0)
       expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(0)
       end
+
+      it 'properly tie-breaks one pair, 4th test' do # "As 8s Ts 2h 9s" vs "As 8s Qh Td 9h"
+      board = []
+      hand1 = [PlayingCard.new("A", "Spades"), PlayingCard.new("8", "Spades"), PlayingCard.new("10", "Spades"), PlayingCard.new("2", "Hearts"), PlayingCard.new("9", "Spades") ]
+      hand2 = [PlayingCard.new("A", "Hearts"), PlayingCard.new("8", "Hearts"), PlayingCard.new("Q", "Hearts"), PlayingCard.new("10", "Diamonds"), PlayingCard.new("9", "Hearts") ]
+      expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(2)
+      expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(1)
+      end
+
+# More HIGH CARD examples that are failing (PLUS note duplicate cards between hands)
+=begin
+"4d 6c 2h 9s Kc"
+"3d 9s 7h Kc Qd"
+"our result = 0"
+"their result = 2"
+=end
+=begin
+"5h 9d 4s Th As"
+"9d 7s Jd 8h Ad"
+"our result = 0"
+"their result = 2"
+=end
+=begin
+"7s 8d Td 6d 9c"
+"6d 9d Tc 9c 9h"
+"our result = 2"
+"their result = 1"
+=end
+=begin
+"Qs 5s Kh 2c Jd"
+"4d 6s Js Td Ks"
+"our result = 0"
+"their result = 1"
+=end
 
     end
 
