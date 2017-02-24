@@ -120,22 +120,28 @@ private
     return 12-h[suit_no].reverse.index(1)
   end
 
-  def self.is_straight?(cards) # ACE = 1 or 14!!!
-    c=0
-    cards.each_index do |x|
-      if cards[x] > 0 then
+  def self.is_straight?(rank_array) # ACE = 1 or 14!!!
+    # returns an array: [<true OR false>, <rank index of highest card in straight OR nil> ]
+    # e.g. rank_array = [0, 2, 1, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0]
+    # RANKS = %w{2 3 4 5 6 7 8 9 10 J Q K A}
+    c=0 # consecutive card counter
+    rank_array_reverse = rank_array.reverse # need to reverse array to always get HIGHEST possible straight
+    rank_array_reverse.each_index do |x|
+      if rank_array_reverse[x] > 0 then
         c+=1
         if c==5 then
-          return true, x
+          return true, 16 - x
         end
       else
         c=0
       end
     end
-    if cards[0] > 0 and cards[1] > 0 and cards[2] > 0 and cards[3] > 0 and cards[12] > 0
+
+    # special case of low straight = A 2 3 4 5
+    if rank_array[0] > 0 and rank_array[1] > 0 and rank_array[2] > 0 and rank_array[3] > 0 and rank_array[12] > 0
       return true, 3
     else
-      return false, nil
+      return false, nil # otherwise return negative result = [false, nil]
     end
   end
 

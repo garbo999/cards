@@ -18,6 +18,10 @@ class PlayingCard
     [self.rank, self.suit]
   end
 
+  def to_s
+    self.rank + ' of ' + self.suit
+  end
+
   def rank
     RANKS[@rank_no]
   end

@@ -137,7 +137,7 @@ RSpec.describe HandAnalyzer do
 "our result = 1"
 "their result = 2"
 =end
-      it 'says that a pair does not beat three of a kind, 2nd test' do
+      it 'says that a pair (actually two pair) does not beat three of a kind, 2nd test' do
         board = []
         hand1 = [PlayingCard.new("3", "Diamonds"), PlayingCard.new("J", "Spades"), PlayingCard.new("J", "Clubs"), PlayingCard.new("3", "Spades"), PlayingCard.new("4", "Spades")]
         hand2 = [PlayingCard.new("A", "Spades"), PlayingCard.new("A", "Clubs"), PlayingCard.new("A", "Diamonds"), PlayingCard.new("6", "Hearts"), PlayingCard.new("K", "Clubs")]
@@ -316,6 +316,32 @@ RSpec.describe HandAnalyzer do
 =end
 
     end
+
+  # note: interesting discussion on wisdom of testing private methods: https://mixandgo.com/blog/3-ways-of-testing-private-methods-in-rails
+  context '#is_straight? meethod' do
+    it 'properly recognises a straight, 1st test' do
+      rank_array = [1,1,1,1,1,0,0,0,0,0,0,0,0] # straight = 2, 3, 4, 5, 6
+      expect(HandAnalyzer.send(:is_straight?, rank_array)).to eq([true, 4])
+    end
+    it 'properly recognises a non-straight, 2nd test' do
+      rank_array = [1,1,1,1,0,1,0,0,0,0,0,0,0] # not a straight = 2, 3, 4, 5, 7
+      expect(HandAnalyzer.send(:is_straight?, rank_array)).to eq([false, nil])
+    end
+    it 'properly recognises a straight, 3rd test' do
+      rank_array = [1,1,1,1,0,0,0,0,0,0,0,0,1] # traight = A, 2, 3, 4, 5 (Ace is at end!)
+      expect(HandAnalyzer.send(:is_straight?, rank_array)).to eq([true, 3])
+    end
+    it 'properly recognises a straight, 4th test' do
+      # here we have 7 cards and three possible straights, so we want the highest possible straight
+      # this test fails initially
+      rank_array = [1,1,1,1,1,1,1,0,0,0,0,0,0] # highest straight = 4, 5, 6, 7, 8
+      expect(HandAnalyzer.send(:is_straight?, rank_array)).to eq([true, 6])
+    end
+    it 'properly recognises a straight, 5th test' do
+      rank_array = [0,1,1,1,1,1,0,0,0,0,0,0,0] # straight = 3, 4, 5, 6, 7
+      expect(HandAnalyzer.send(:is_straight?, rank_array)).to eq([true, 5])
+    end
+  end
 
   end
 
