@@ -59,9 +59,11 @@ class HandAnalyzer
 
   def self.evaluate(board, hand)
     cards = board + hand
+    puts cards.show_cards
 
     h_rank = [0,0,0,0,0,0,0,0,0,0,0,0,0]
     h_suit = [0,0,0,0]
+    high_card_array = []
 
     cards.each do |c| 
       h_rank[c.rank_no] += 1
@@ -75,6 +77,7 @@ class HandAnalyzer
       straight_flush, high_card = straight_flush?(cards) 
       return :straight_flush, [high_card] if straight_flush
     end
+
     if h_rank.include?(4)
       return :four_of_a_kind, [h_rank.index(4), h_rank.index(1)]
     elsif h_rank.include?(3) and h_rank.include?(2)
@@ -86,13 +89,19 @@ class HandAnalyzer
       return :straight, [s_high_card]
     elsif h_rank.max == 3
       return :three_of_a_kind, [h_rank.index(3), 12-h_rank.reverse.index(1), h_rank.index(1)]
-    elsif h_rank.max == 1
-      return :high_card, [12-h_rank.reverse.index(1)]
+    elsif h_rank.max == 1 # !!! This overlaps the else clause in this if statement below ('return :high_card, h_rank.sort')
+      #puts "h_rank = #{h_rank}"
+      h_rank.each_index do |i|
+        if h_rank[i] != 0
+        high_card_array << i
+        end
+      end
+      return :high_card, high_card_array.pop(5).reverse
     elsif h_rank.count(2) == 2
       return :two_pair, [12-h_rank.reverse.index(2), h_rank.index(2), 12-h_rank.reverse.index(1)]
     elsif h_rank.include?(2)
       return :pair, [h_rank.index(2), 12-h_rank.reverse.index(1)]
-    else
+    else # this never gets executed!?
       return :high_card, h_rank.sort
     end      
   end

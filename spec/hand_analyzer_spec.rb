@@ -291,7 +291,7 @@ RSpec.describe HandAnalyzer do
 
 # More HIGH CARD examples that are failing (PLUS note duplicate cards between hands)
 =begin
-"4d 6c 2h 9s Kc"
+"4d 6c 2h 9s Kc" DUPE Kc
 "3d 9s 7h Kc Qd"
 "our result = 0"
 "their result = 2"
@@ -317,31 +317,38 @@ RSpec.describe HandAnalyzer do
 
     end
 
-  # note: interesting discussion on wisdom of testing private methods: https://mixandgo.com/blog/3-ways-of-testing-private-methods-in-rails
-  context '#is_straight? meethod' do
-    it 'properly recognises a straight, 1st test' do
-      rank_array = [1,1,1,1,1,0,0,0,0,0,0,0,0] # straight = 2, 3, 4, 5, 6
-      expect(HandAnalyzer.send(:is_straight?, rank_array)).to eq([true, 4])
+    # note: interesting discussion on wisdom of testing private methods: https://mixandgo.com/blog/3-ways-of-testing-private-methods-in-rails
+    context '#is_straight? method' do
+      it 'properly recognises a straight, 1st test' do
+        rank_array = [1,1,1,1,1,0,0,0,0,0,0,0,0] # straight = 2, 3, 4, 5, 6
+        expect(HandAnalyzer.send(:is_straight?, rank_array)).to eq([true, 4])
+      end
+      it 'properly recognises a non-straight, 2nd test' do
+        rank_array = [1,1,1,1,0,1,0,0,0,0,0,0,0] # not a straight = 2, 3, 4, 5, 7
+        expect(HandAnalyzer.send(:is_straight?, rank_array)).to eq([false, nil])
+      end
+      it 'properly recognises a straight, 3rd test' do
+        rank_array = [1,1,1,1,0,0,0,0,0,0,0,0,1] # traight = A, 2, 3, 4, 5 (Ace is at end!)
+        expect(HandAnalyzer.send(:is_straight?, rank_array)).to eq([true, 3])
+      end
+      it 'properly recognises a straight, 4th test' do
+        # here we have 7 cards and three possible straights, so we want the highest possible straight
+        # this test fails initially
+        rank_array = [1,1,1,1,1,1,1,0,0,0,0,0,0] # highest straight = 4, 5, 6, 7, 8
+        expect(HandAnalyzer.send(:is_straight?, rank_array)).to eq([true, 6])
+      end
+      it 'properly recognises a straight, 5th test' do
+        rank_array = [0,1,1,1,1,1,0,0,0,0,0,0,0] # straight = 3, 4, 5, 6, 7
+        expect(HandAnalyzer.send(:is_straight?, rank_array)).to eq([true, 5])
+      end
     end
-    it 'properly recognises a non-straight, 2nd test' do
-      rank_array = [1,1,1,1,0,1,0,0,0,0,0,0,0] # not a straight = 2, 3, 4, 5, 7
-      expect(HandAnalyzer.send(:is_straight?, rank_array)).to eq([false, nil])
+
+    context '#evaluate method tie breaks' do
+      it 'returns :high_card and all five cards sorted in case of only a high-card hand' do
+        # board + hand = ["2 of Spades", "3 of Hearts", "7 of Spades", "A of Hearts", "9 of Spades", "10 of Spades", "K of Hearts"]
+        expect(HandAnalyzer.evaluate(*@high_card)).to eql([:high_card, [12, 11, 8, 7, 5]]) # A K 10 9 7
+      end
     end
-    it 'properly recognises a straight, 3rd test' do
-      rank_array = [1,1,1,1,0,0,0,0,0,0,0,0,1] # traight = A, 2, 3, 4, 5 (Ace is at end!)
-      expect(HandAnalyzer.send(:is_straight?, rank_array)).to eq([true, 3])
-    end
-    it 'properly recognises a straight, 4th test' do
-      # here we have 7 cards and three possible straights, so we want the highest possible straight
-      # this test fails initially
-      rank_array = [1,1,1,1,1,1,1,0,0,0,0,0,0] # highest straight = 4, 5, 6, 7, 8
-      expect(HandAnalyzer.send(:is_straight?, rank_array)).to eq([true, 6])
-    end
-    it 'properly recognises a straight, 5th test' do
-      rank_array = [0,1,1,1,1,1,0,0,0,0,0,0,0] # straight = 3, 4, 5, 6, 7
-      expect(HandAnalyzer.send(:is_straight?, rank_array)).to eq([true, 5])
-    end
-  end
 
   end
 
