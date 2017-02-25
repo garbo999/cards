@@ -1,5 +1,7 @@
 class HandAnalyzer
 
+  HAND_RANK_HASH = {straight_flush: 9, four_of_a_kind: 8, fullhouse: 7, flush: 6, straight: 5, three_of_a_kind: 4, two_pair: 3, pair: 2, high_card: 1}
+
   def self.show_odds(board, hand1, hand2, game='Texas Holdem')
     cd = CardDeck.new
     cd.deal_specific(hand1[0], hand1[1], hand2[0], hand2[1])
@@ -23,9 +25,9 @@ class HandAnalyzer
   def self.winner(board, hand1, hand2, game='Texas Holdem')
     hand1_eval, hand1_high_card = evaluate(board, hand1)
     hand2_eval, hand2_high_card = evaluate(board, hand2)
-    if  hand1_eval > hand2_eval
+    if  HAND_RANK_HASH[hand1_eval] > HAND_RANK_HASH[hand2_eval]
       return 1
-    elsif hand1_eval < hand2_eval 
+    elsif HAND_RANK_HASH[hand1_eval] < HAND_RANK_HASH[hand2_eval]
       return 2
     elsif hand1_high_card[0] > hand2_high_card[0]
       return 1
@@ -59,7 +61,7 @@ class HandAnalyzer
 
   def self.evaluate(board, hand)
     cards = board + hand
-    puts cards.show_cards
+    #puts cards.show_cards
 
     h_rank = [0,0,0,0,0,0,0,0,0,0,0,0,0]
     h_suit = [0,0,0,0]

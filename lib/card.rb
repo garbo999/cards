@@ -1,12 +1,3 @@
-# Note that I added a 'show_cards' to Array to make it easy to display a hand
-class Array
-  def show_cards
-    new_array = []
-    self.map {|c| new_array << c.to_s}
-    return new_array
-  end
-end
-
 class PlayingCard
   include Comparable
   attr_reader :rank_no, :suit_no

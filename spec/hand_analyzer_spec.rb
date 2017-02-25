@@ -75,40 +75,49 @@ RSpec.describe HandAnalyzer do
   end
 
   context '#evaluate method' do
-    it 'recognises a high card' do
-      expect(HandAnalyzer.evaluate(*@high_card)[0]).to eql(:high_card)
+    context 'recognizing hands' do
+      it 'recognises a high card' do
+        expect(HandAnalyzer.evaluate(*@high_card)[0]).to eql(:high_card)
+      end
+
+      it 'recognises a pair' do
+        expect(HandAnalyzer.evaluate(*@one_pair)[0]).to eql(:pair)
+      end
+
+      it 'recognises a two pair' do
+        expect(HandAnalyzer.evaluate(*@two_pair)[0]).to eql(:two_pair)
+      end
+
+      it 'recognises a three of a kind' do
+        expect(HandAnalyzer.evaluate(*@three_of_a_kind)[0]).to eql(:three_of_a_kind)
+      end
+
+      it 'recognises a straight' do
+        expect(HandAnalyzer.evaluate(*@straight)[0]).to eql(:straight)
+      end
+      it 'recognises a straight that starts with an Ace' do
+        expect(HandAnalyzer.evaluate(*@straight_with_ace)[0]).to eql(:straight)
+      end
+      it 'recognises a flush' do
+        expect(HandAnalyzer.evaluate(*@flush)[0]).to eql(:flush)
+      end
+      it 'recognises a full house' do
+        expect(HandAnalyzer.evaluate(*@fullhouse)[0]).to eql(:fullhouse)
+      end
+      it 'recognises a four of a kind' do
+        expect(HandAnalyzer.evaluate(*@four_of_a_kind)[0]).to eql(:four_of_a_kind)
+      end
+
+      it 'recognises a straight flush' do
+        expect(HandAnalyzer.evaluate(*@straight_flush)[0]).to eql(:straight_flush)
+      end
     end
 
-    it 'recognises a pair' do
-      expect(HandAnalyzer.evaluate(*@one_pair)[0]).to eql(:pair)
-    end
-
-    it 'recognises a two pair' do
-      expect(HandAnalyzer.evaluate(*@two_pair)[0]).to eql(:two_pair)
-    end
-
-    it 'recognises a three of a kind' do
-      expect(HandAnalyzer.evaluate(*@three_of_a_kind)[0]).to eql(:three_of_a_kind)
-    end
-
-    it 'recognises a straight' do
-      expect(HandAnalyzer.evaluate(*@straight)[0]).to eql(:straight)
-    end
-    it 'recognises a straight that starts with an Ace' do
-      expect(HandAnalyzer.evaluate(*@straight_with_ace)[0]).to eql(:straight)
-    end
-    it 'recognises a flush' do
-      expect(HandAnalyzer.evaluate(*@flush)[0]).to eql(:flush)
-    end
-    it 'recognises a full house' do
-      expect(HandAnalyzer.evaluate(*@fullhouse)[0]).to eql(:fullhouse)
-    end
-    it 'recognises a four of a kind' do
-      expect(HandAnalyzer.evaluate(*@four_of_a_kind)[0]).to eql(:four_of_a_kind)
-    end
-
-    it 'recognises a straight flush' do
-      expect(HandAnalyzer.evaluate(*@straight_flush)[0]).to eql(:straight_flush)
+    context 'tie breaks' do
+      it 'returns :high_card and all five cards sorted in case of a high-card hand' do
+        # board + hand = ["2 of Spades", "3 of Hearts", "7 of Spades", "A of Hearts", "9 of Spades", "10 of Spades", "K of Hearts"]
+        expect(HandAnalyzer.evaluate(*@high_card)).to eql([:high_card, [12, 11, 8, 7, 5]]) # A K 10 9 7
+      end
     end
   end
 
@@ -160,6 +169,15 @@ RSpec.describe HandAnalyzer do
         expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(1)
         expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(2)
       end
+
+      it 'knows a straight beats 3 of a kind' do # "7s 8d Td 6d 9c" vs "6d 9d Tc 9s 9h"
+      board = []
+      hand1 = [PlayingCard.new("7", "Spades"), PlayingCard.new("8", "Diamonds"), PlayingCard.new("10", "Diamonds"), PlayingCard.new("6", "Diamonds"), PlayingCard.new("9", "Clubs") ]
+      hand2 = [PlayingCard.new("6", "Diamonds"), PlayingCard.new("9", "Diamonds"), PlayingCard.new("10", "Clubs"), PlayingCard.new("9", "Spades"), PlayingCard.new("9", "Hearts") ]
+      expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(1)
+      expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(2)
+      end
+
 
 =begin
 "9s Ac 8d Qh 6s"
@@ -281,12 +299,20 @@ RSpec.describe HandAnalyzer do
       expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(0)
       end
 
-      it 'properly tie-breaks one pair, 4th test' do # "As 8s Ts 2h 9s" vs "As 8s Qh Td 9h"
+      it 'properly tie-breaks high cards, 1st test' do # "As 8s Ts 2h 9s" vs "As 8h Qh Td 9h"
       board = []
       hand1 = [PlayingCard.new("A", "Spades"), PlayingCard.new("8", "Spades"), PlayingCard.new("10", "Spades"), PlayingCard.new("2", "Hearts"), PlayingCard.new("9", "Spades") ]
       hand2 = [PlayingCard.new("A", "Hearts"), PlayingCard.new("8", "Hearts"), PlayingCard.new("Q", "Hearts"), PlayingCard.new("10", "Diamonds"), PlayingCard.new("9", "Hearts") ]
       expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(2)
       expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(1)
+      end
+
+      it 'properly tie-breaks high cards, 2nd test' do # "Qs 5s Kh 2c Jd" vs "4d 6s Js Td Ks"
+      board = []
+      hand1 = [PlayingCard.new("Q", "Spades"), PlayingCard.new("5", "Spades"), PlayingCard.new("K", "Hearts"), PlayingCard.new("2", "Clubs"), PlayingCard.new("J", "Diamonds") ]
+      hand2 = [PlayingCard.new("4", "Diamonds"), PlayingCard.new("6", "Spades"), PlayingCard.new("J", "Spades"), PlayingCard.new("10", "Diamonds"), PlayingCard.new("K", "Spades") ]
+      expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(1)
+      expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(2)
       end
 
 # More HIGH CARD examples that are failing (PLUS note duplicate cards between hands)
@@ -302,21 +328,11 @@ RSpec.describe HandAnalyzer do
 "our result = 0"
 "their result = 2"
 =end
-=begin
-"7s 8d Td 6d 9c"
-"6d 9d Tc 9c 9h"
-"our result = 2"
-"their result = 1"
-=end
-=begin
-"Qs 5s Kh 2c Jd"
-"4d 6s Js Td Ks"
-"our result = 0"
-"their result = 1"
-=end
 
     end
+  end
 
+  context 'private methods' do
     # note: interesting discussion on wisdom of testing private methods: https://mixandgo.com/blog/3-ways-of-testing-private-methods-in-rails
     context '#is_straight? method' do
       it 'properly recognises a straight, 1st test' do
@@ -342,14 +358,5 @@ RSpec.describe HandAnalyzer do
         expect(HandAnalyzer.send(:is_straight?, rank_array)).to eq([true, 5])
       end
     end
-
-    context '#evaluate method tie breaks' do
-      it 'returns :high_card and all five cards sorted in case of only a high-card hand' do
-        # board + hand = ["2 of Spades", "3 of Hearts", "7 of Spades", "A of Hearts", "9 of Spades", "10 of Spades", "K of Hearts"]
-        expect(HandAnalyzer.evaluate(*@high_card)).to eql([:high_card, [12, 11, 8, 7, 5]]) # A K 10 9 7
-      end
-    end
-
   end
-
 end
