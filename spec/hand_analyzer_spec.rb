@@ -140,13 +140,7 @@ RSpec.describe HandAnalyzer do
         expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(1)
       end
 
-=begin
-"3d Js Jc 3s 4s"
-"As Ac Ad 6h Kc"
-"our result = 1"
-"their result = 2"
-=end
-      it 'says that a pair (actually two pair) does not beat three of a kind, 2nd test' do
+      it 'says that two pair LOSES to three of a kind' do
         board = []
         hand1 = [PlayingCard.new("3", "Diamonds"), PlayingCard.new("J", "Spades"), PlayingCard.new("J", "Clubs"), PlayingCard.new("3", "Spades"), PlayingCard.new("4", "Spades")]
         hand2 = [PlayingCard.new("A", "Spades"), PlayingCard.new("A", "Clubs"), PlayingCard.new("A", "Diamonds"), PlayingCard.new("6", "Hearts"), PlayingCard.new("K", "Clubs")]
@@ -178,13 +172,6 @@ RSpec.describe HandAnalyzer do
       expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(2)
       end
 
-
-=begin
-"9s Ac 8d Qh 6s"
-"5d 3h 5c 5s 3s"
-"our result = 1"
-"their result = 2"
-=end
       it 'knows a fullhouse beats Ace high card' do
         board = []
         hand1 = [PlayingCard.new("9", "Spades"), PlayingCard.new("A", "Clubs"), PlayingCard.new("8", "Diamonds"), PlayingCard.new("Q", "Hearts"), PlayingCard.new("6", "Spades")  ]
@@ -315,19 +302,37 @@ RSpec.describe HandAnalyzer do
       expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(2)
       end
 
-# More HIGH CARD examples that are failing (PLUS note duplicate cards between hands)
-=begin
-"4d 6c 2h 9s Kc" DUPE Kc
-"3d 9s 7h Kc Qd"
-"our result = 0"
-"their result = 2"
-=end
-=begin
-"5h 9d 4s Th As"
-"9d 7s Jd 8h Ad"
-"our result = 0"
-"their result = 2"
-=end
+      it 'properly tie-breaks high cards, 3rd test' do # "5h 9d 4s Th As" vs "9c 7s Jd 8h Ad"
+      board = []
+      hand1 = [PlayingCard.new("5", "Hearts"), PlayingCard.new("9", "Diamonds"), PlayingCard.new("4", "Spades"), PlayingCard.new("10", "Hearts"), PlayingCard.new("A", "Spades") ]
+      hand2 = [PlayingCard.new("9", "Clubs"), PlayingCard.new("7", "Spades"), PlayingCard.new("J", "Diamonds"), PlayingCard.new("8", "Hearts"), PlayingCard.new("A", "Diamonds") ]
+      expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(2)
+      expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(1)
+      end
+
+      it 'properly tie-breaks high cards, 4th test (3 cards equal)' do # "5h 9d 4s Th As" vs "5c 9s 3d Td Ad"
+      board = []
+      hand1 = [PlayingCard.new("5", "Hearts"), PlayingCard.new("9", "Diamonds"), PlayingCard.new("4", "Spades"), PlayingCard.new("10", "Hearts"), PlayingCard.new("A", "Spades") ]
+      hand2 = [PlayingCard.new("4", "Clubs"), PlayingCard.new("9", "Spades"), PlayingCard.new("3", "Diamonds"), PlayingCard.new("10", "Diamonds"), PlayingCard.new("A", "Diamonds") ]
+      expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(1)
+      expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(2)
+      end
+
+      it 'properly tie-breaks high cards, 5th test (4 cards equal)' do # "5h 9d 4s Th As" vs "5c 9s 3d Td Ad"
+      board = []
+      hand1 = [PlayingCard.new("5", "Hearts"), PlayingCard.new("9", "Diamonds"), PlayingCard.new("4", "Spades"), PlayingCard.new("10", "Hearts"), PlayingCard.new("A", "Spades") ]
+      hand2 = [PlayingCard.new("5", "Clubs"), PlayingCard.new("9", "Spades"), PlayingCard.new("3", "Diamonds"), PlayingCard.new("10", "Diamonds"), PlayingCard.new("A", "Diamonds") ]
+      expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(1)
+      expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(2)
+      end
+
+      it 'properly tie-breaks high cards, 6th test (true tie)' do # "5h 9d 4s Th As" vs "5c 9s 4d Td Ad"
+      board = []
+      hand1 = [PlayingCard.new("5", "Hearts"), PlayingCard.new("9", "Diamonds"), PlayingCard.new("4", "Spades"), PlayingCard.new("10", "Hearts"), PlayingCard.new("A", "Spades") ]
+      hand2 = [PlayingCard.new("5", "Clubs"), PlayingCard.new("9", "Spades"), PlayingCard.new("4", "Diamonds"), PlayingCard.new("10", "Diamonds"), PlayingCard.new("A", "Diamonds") ]
+      expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(0)
+      expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(0)
+      end
 
     end
   end

@@ -23,28 +23,45 @@ class HandAnalyzer
   end
 
   def self.winner(board, hand1, hand2, game='Texas Holdem')
-    hand1_eval, hand1_high_card = evaluate(board, hand1)
-    hand2_eval, hand2_high_card = evaluate(board, hand2)
+    hand1_eval, hand1_high_card_array = evaluate(board, hand1)
+    hand2_eval, hand2_high_card_array = evaluate(board, hand2)
     if  HAND_RANK_HASH[hand1_eval] > HAND_RANK_HASH[hand2_eval]
       return 1
     elsif HAND_RANK_HASH[hand1_eval] < HAND_RANK_HASH[hand2_eval]
       return 2
-    elsif hand1_high_card[0] > hand2_high_card[0]
+    elsif hand1_high_card_array[0] > hand2_high_card_array[0]
       return 1
-    elsif hand1_high_card[0] < hand2_high_card[0]
+    elsif hand1_high_card_array[0] < hand2_high_card_array[0]
       return 2
     else
+      # assuming the two arrays (hand1_high_card_array, hand2_high_card_array) must have equal length if we get to this tie-break code
+      hand1_high_card_array.each_index do |i|
+        if hand1_high_card_array[i] > hand2_high_card_array[i]
+          return 1
+        elsif hand1_high_card_array[i] < hand2_high_card_array[i]
+          return 2
+        end
+      end
+
+      # if we get this far, we have an actual tie so return 0
+      return 0      
+=begin
       (1..4).each do |x|
+
         if !hand1_high_card[x].nil? and !hand1_high_card[x].nil? then
+
           if hand1_high_card[x] > hand2_high_card[x]
             return 1
           elsif hand1_high_card[x] < hand2_high_card[x]
             return 2
           end
+
         else
           return 0
         end
+
       end
+=end
     end
   end
 
