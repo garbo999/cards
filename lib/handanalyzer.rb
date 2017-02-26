@@ -25,13 +25,10 @@ class HandAnalyzer
   def self.winner(board, hand1, hand2, game='Texas Holdem')
     hand1_eval, hand1_high_card_array = evaluate(board, hand1)
     hand2_eval, hand2_high_card_array = evaluate(board, hand2)
+
     if  HAND_RANK_HASH[hand1_eval] > HAND_RANK_HASH[hand2_eval]
       return 1
     elsif HAND_RANK_HASH[hand1_eval] < HAND_RANK_HASH[hand2_eval]
-      return 2
-    elsif hand1_high_card_array[0] > hand2_high_card_array[0]
-      return 1
-    elsif hand1_high_card_array[0] < hand2_high_card_array[0]
       return 2
     else
       # assuming the two arrays (hand1_high_card_array, hand2_high_card_array) must have equal length if we get to this tie-break code
@@ -45,23 +42,6 @@ class HandAnalyzer
 
       # if we get this far, we have an actual tie so return 0
       return 0      
-=begin
-      (1..4).each do |x|
-
-        if !hand1_high_card[x].nil? and !hand1_high_card[x].nil? then
-
-          if hand1_high_card[x] > hand2_high_card[x]
-            return 1
-          elsif hand1_high_card[x] < hand2_high_card[x]
-            return 2
-          end
-
-        else
-          return 0
-        end
-
-      end
-=end
     end
   end
 
@@ -78,7 +58,6 @@ class HandAnalyzer
 
   def self.evaluate(board, hand)
     cards = board + hand
-    #puts cards.show_cards
 
     h_rank = [0,0,0,0,0,0,0,0,0,0,0,0,0]
     h_suit = [0,0,0,0]
@@ -102,30 +81,49 @@ class HandAnalyzer
     elsif h_rank.include?(3) and h_rank.include?(2)
       return :fullhouse, [h_rank.index(3), h_rank.index(2)]
     elsif is_flush
-      high_card = flush_high_card(cards, h_suit.index(h_suit.max))
-      return :flush, [high_card]
+      #high_card = flush_high_card(cards, h_suit.index(h_suit.max))
+      return :flush, hand_rank_evaluator(h_rank, Proc.new {|val| val != 0}).pop(5).reverse
     elsif is_straight
       return :straight, [s_high_card]
     elsif h_rank.max == 3
       return :three_of_a_kind, [h_rank.index(3), 12-h_rank.reverse.index(1), h_rank.index(1)]
     elsif h_rank.max == 1 # !!! This overlaps the else clause in this if statement below ('return :high_card, h_rank.sort')
-      #puts "h_rank = #{h_rank}"
+=begin
       h_rank.each_index do |i|
         if h_rank[i] != 0
         high_card_array << i
         end
       end
-      return :high_card, high_card_array.pop(5).reverse
+=end
+      return :high_card, hand_rank_evaluator(h_rank, Proc.new {|val| val != 0}).pop(5).reverse
     elsif h_rank.count(2) == 2
       return :two_pair, [12-h_rank.reverse.index(2), h_rank.index(2), 12-h_rank.reverse.index(1)]
     elsif h_rank.include?(2)
-      return :pair, [h_rank.index(2), 12-h_rank.reverse.index(1)]
+=begin
+      h_rank.each_index do |i|
+        if h_rank[i] == 1
+        high_card_array << i
+        end
+      end
+=end
+      return :pair, hand_rank_evaluator(h_rank, Proc.new {|val| val == 1}).pop(3).reverse.unshift(h_rank.index(2))
+      #return :high_card, hand_rank_evaluator(h_rank, Proc.new {|val| val != 0}).pop(5).reverse
     else # this never gets executed!?
       return :high_card, h_rank.sort
     end      
   end
 
 private
+
+  def self.hand_rank_evaluator(h_rank, proc) # proc returns true or false, e.g. proc = Proc.new {|val| val != 0}
+    high_card_array = Array.new
+    h_rank.each_index do |i|
+      if proc.call(h_rank[i])
+      high_card_array << i
+      end
+    end
+    return high_card_array
+  end
 
   def self.straight_flush?(cards)
     # check 21 combinations = 7 taken 5 times

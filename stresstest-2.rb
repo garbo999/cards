@@ -1,9 +1,12 @@
+# 
 # The 2nd stress test generates random PAIRS of hands and compares the evaluation of the WINNER (our result vs. the ruby-poker gem).
 #
+# 26feb17: checked 7.333 million random hands without error
 
 require 'rubygems'
 require 'ruby-poker'
 
+require "./lib/array.rb"
 require "./lib/card.rb"
 require "./lib/carddeck.rb"
 require "./lib/handanalyzer.rb"
@@ -23,8 +26,8 @@ end
 # some conversion stuff
 SUITS = ['S', 'H', 'D', 'C']
 RANKS = %w{ 2 3 4 5 6 7 8 9 T J Q K A}
-ranks_ours = %w{2 3 4 5 6 7 8 9 10 J Q K A}
-suits_ours = %w{Spades Hearts Diamonds Clubs}
+RANKS_OURS = %w{2 3 4 5 6 7 8 9 10 J Q K A}
+SUITS_OURS = %w{Spades Hearts Diamonds Clubs}
 RANKING_CONVERSION = { 'Straight Flush' => 'straight_flush',
   'Four of a kind' => 'four_of_a_kind',
   'Full house' => 'fullhouse',
@@ -36,56 +39,56 @@ RANKING_CONVERSION = { 'Straight Flush' => 'straight_flush',
   'Highest Card' => 'high_card'
 }
   
+RANKS_ARRAY = (0..12).to_a
+SUITS_ARRAY = (0..3).to_a
 i = 0
+
 while true do
   # hand_1 is the gem's hand, hand_1_ours is our hand, etc.
   # these variables have to be defined here (outside loops) due to scope issues with the loop below
-  hand_1 = [] 
-  hand_2 = [] 
+  ten_card_array = []
+
   hand_1_ours = []
   hand_2_ours = []
   card_1 = "NONE"
   card_2 = "NONE"
-  ranks_index_1 = "NONE"
-  ranks_index_2 = "NONE"
-  suits_index_1 = "NONE"
-  suits_index_2 = "NONE"
 
-  5.times do 
-    loop do # generate non-duplicate card for hand_1
-      ranks_index_1 = (0..12).to_a.sample
-      suits_index_1 = (0..3).to_a.sample
+  # generate 10 unique cards (2 hands)
+  10.times do
+    loop do # generate non-duplicate card 
+      ranks_index_1 = RANKS_ARRAY.sample
+      suits_index_1 = SUITS_ARRAY.sample
       card_1 = RANKS[ranks_index_1] + SUITS[suits_index_1]
       #puts card
-      if !hand_1.include?(card_1)
+      if !ten_card_array.include?(card_1)
         break 
       end
     end 
-    loop do # generate non-duplicate card for hand_2
-      ranks_index_2 = (0..12).to_a.sample
-      suits_index_2 = (0..3).to_a.sample
-      card_2 = RANKS[ranks_index_2] + SUITS[suits_index_2]
-      #puts card
-      if (!hand_2.include?(card_2) and !hand_1.include?(card_2)) # don't allow duplicate cards between hands
-        break
-      end
-    end 
-    hand_1 << card_1
-    hand_2 << card_2
-    card_ours_1 = PlayingCard.new(ranks_ours[ranks_index_1], suits_ours[suits_index_1])
-    card_ours_2 = PlayingCard.new(ranks_ours[ranks_index_2], suits_ours[suits_index_2])
-    hand_1_ours << card_ours_1
-    hand_2_ours << card_ours_2
-    #p hand_1
+    ten_card_array << card_1
   end
 
-  puts "evaluating hand no. #{i}"
+  hand_1 = ten_card_array[0..4]
+  hand_2 = ten_card_array[5..9]
+
+=begin
+  p hand_1.sort
+  p hand_2.sort
+=end
+
+  # generate two hands in our format
+  hand_1.each {|c| hand_1_ours << PlayingCard.new(RANKS_OURS[ RANKS.index(c[0]) ], SUITS_OURS[ SUITS.index(c[1]) ])}
+  hand_2.each {|c| hand_2_ours << PlayingCard.new(RANKS_OURS[ RANKS.index(c[0]) ], SUITS_OURS[ SUITS.index(c[1]) ])}
+
+=begin
+  p hand_1_ours.show_cards
+  p hand_2_ours.show_cards
+  #break
+=end
+
+  #puts "evaluating hand no. #{i}"
   # build evaluate the randomly generate hands with gem vs. our HandAnalyzer and compare results
   hand_1 = PokerHand.new(hand_1)
   hand_2 = PokerHand.new(hand_2)
-  #our_ranking = HandAnalyzer.evaluate([], hand_1_ours)
-  #test_comparison = RANKING_CONVERSION[hand_1.rank] == our_ranking[0].to_s
-
 
   if HandAnalyzer.winner([], hand_1_ours, hand_2_ours) != convert_result_from_ruby_poker(hand_1, hand_2)
     p hand_1.just_cards
@@ -94,15 +97,6 @@ while true do
     p "their result = " + convert_result_from_ruby_poker(hand_1, hand_2).to_s
     break
   end
-=begin
-  if ! test_comparison
-    p hand_1.just_cards
-    p hand_1.rank
-    p HandAnalyzer.evaluate([], hand_1_ours)
-    p test_comparison
-    break
-  end
-=end
 
   # display counter every 1000 iterations
   i += 1

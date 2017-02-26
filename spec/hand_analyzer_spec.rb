@@ -222,6 +222,36 @@ RSpec.describe HandAnalyzer do
       expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(2)
       end
 
+=begin
+"Js 3s Ks 6s Qs"
+"8d 6d 3d Kd 2d"
+"our result = 0"
+"their result = 1"
+=end
+
+      it 'properly tie-breaks two flushes, 2nd test' do # Js 3s Ks 6s Qs vs 8d 6d 3d Kd 2d
+      board = []
+      hand1 = [PlayingCard.new("J", "Spades"), PlayingCard.new("3", "Spades"), PlayingCard.new("K", "Spades"), PlayingCard.new("6", "Spades"), PlayingCard.new("Q", "Spades")]
+      hand2 = [PlayingCard.new("8", "Diamonds"), PlayingCard.new("6", "Diamonds"), PlayingCard.new("3", "Diamonds"), PlayingCard.new("K", "Diamonds"), PlayingCard.new("2", "Diamonds")]
+      expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(1)
+      expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(2)
+      end
+
+=begin
+"2d Ad 3d 9d Qd"
+"As 9s Qs 6s Ts"
+"our result = 0"
+"their result = 2"
+=end
+
+      it 'properly tie-breaks two flushes, 3rd test' do # Js 3s Ks 6s Qs vs 8d 6d 3d Kd 2d
+      board = []
+      hand1 = [PlayingCard.new("2", "Diamonds"), PlayingCard.new("A", "Diamonds"), PlayingCard.new("3", "Diamonds"), PlayingCard.new("9", "Diamonds"), PlayingCard.new("Q", "Diamonds")]
+      hand2 = [PlayingCard.new("A", "Spades"), PlayingCard.new("9", "Spades"), PlayingCard.new("Q", "Spades"), PlayingCard.new("6", "Spades"), PlayingCard.new("10", "Spades")]
+      expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(2)
+      expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(1)
+      end
+
       it 'properly tie-breaks two straights' do # Ac Kd Qc Js 10h vs Kc Qc Js 10h 9c
       board = [PlayingCard.new("J", "Spades"), PlayingCard.new("Q", "Clubs"), PlayingCard.new("7", "Clubs"), PlayingCard.new("5", "Clubs"), PlayingCard.new("10", "Hearts")]
       hand1 = [PlayingCard.new("A", "Clubs"), PlayingCard.new("K", "Diamonds") ]
@@ -286,6 +316,21 @@ RSpec.describe HandAnalyzer do
       expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(0)
       end
 
+=begin
+"4s Td 4c 2s 3c"
+"9c 4c 4d 2c Th" !!! 4c twice
+"our result = 0"
+"their result = 2"      
+=end
+
+      it 'properly tie-breaks one pair, 4th test (two kickers)' do # 4s Td 4c 2s 3c" vs "9c 4c 4d 2c Th !!! 4c twice
+      board = []
+      hand1 = [PlayingCard.new("4", "Spades"), PlayingCard.new("10", "Diamonds"), PlayingCard.new("4", "Hearts"), PlayingCard.new("2", "Spades"), PlayingCard.new("3", "Clubs")]
+      hand2 = [PlayingCard.new("9", "Clubs"), PlayingCard.new("4", "Clubs"), PlayingCard.new("4", "Diamonds"), PlayingCard.new("2", "Clubs"), PlayingCard.new("10", "Hearts")]
+      expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(2)
+      expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(1)
+      end
+
       it 'properly tie-breaks high cards, 1st test' do # "As 8s Ts 2h 9s" vs "As 8h Qh Td 9h"
       board = []
       hand1 = [PlayingCard.new("A", "Spades"), PlayingCard.new("8", "Spades"), PlayingCard.new("10", "Spades"), PlayingCard.new("2", "Hearts"), PlayingCard.new("9", "Spades") ]
@@ -327,6 +372,14 @@ RSpec.describe HandAnalyzer do
       end
 
       it 'properly tie-breaks high cards, 6th test (true tie)' do # "5h 9d 4s Th As" vs "5c 9s 4d Td Ad"
+      board = []
+      hand1 = [PlayingCard.new("5", "Hearts"), PlayingCard.new("9", "Diamonds"), PlayingCard.new("4", "Spades"), PlayingCard.new("10", "Hearts"), PlayingCard.new("A", "Spades") ]
+      hand2 = [PlayingCard.new("5", "Clubs"), PlayingCard.new("9", "Spades"), PlayingCard.new("4", "Diamonds"), PlayingCard.new("10", "Diamonds"), PlayingCard.new("A", "Diamonds") ]
+      expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(0)
+      expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(0)
+      end
+
+      it 'properly tie-breaks pairs' do # "4s Td 4c 2s 3c4s Td 4c 2s 3c" vs "9c 4c 4d 2c Th"
       board = []
       hand1 = [PlayingCard.new("5", "Hearts"), PlayingCard.new("9", "Diamonds"), PlayingCard.new("4", "Spades"), PlayingCard.new("10", "Hearts"), PlayingCard.new("A", "Spades") ]
       hand2 = [PlayingCard.new("5", "Clubs"), PlayingCard.new("9", "Spades"), PlayingCard.new("4", "Diamonds"), PlayingCard.new("10", "Diamonds"), PlayingCard.new("A", "Diamonds") ]
