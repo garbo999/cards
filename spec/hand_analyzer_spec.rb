@@ -119,6 +119,20 @@ RSpec.describe HandAnalyzer do
         expect(HandAnalyzer.evaluate(*@high_card)).to eql([:high_card, [12, 11, 8, 7, 5]]) # A K 10 9 7
       end
     end
+
+    context 'strange edge cases' do
+      it 'returns proper values for 7 card board with 4 of a kind and 3 of a kind' do
+        board = [PlayingCard.new("2", "Spades"), PlayingCard.new("2", "Hearts"), PlayingCard.new("2", "Diamonds"), PlayingCard.new("9", "Diamonds"), PlayingCard.new("2", "Clubs")]
+        hand1 = [PlayingCard.new("9", "Spades"), PlayingCard.new("9", "Hearts") ]
+        expect(HandAnalyzer.evaluate(board, hand1)).to eql([:four_of_a_kind, [0, 7]]) 
+      end
+
+      it 'returns proper values for 7 card board with 4 of a kind and pair, 2nd test' do
+        board = [PlayingCard.new("2", "Spades"), PlayingCard.new("2", "Hearts"), PlayingCard.new("2", "Diamonds"), PlayingCard.new("9", "Diamonds"), PlayingCard.new("2", "Clubs")]
+        hand1 = [PlayingCard.new("10", "Spades"), PlayingCard.new("10", "Hearts") ]
+        expect(HandAnalyzer.evaluate(board, hand1)).to eql([:four_of_a_kind, [0, 8]]) 
+      end
+    end
   end
 
   context '#winner method' do
@@ -179,6 +193,14 @@ RSpec.describe HandAnalyzer do
         expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(2)
         expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(1)
       end
+
+      it 'handles a problem straight flush situation (straight and flush but not straight-flush)' do
+        board = [PlayingCard.new("2", "Spades"), PlayingCard.new("3", "Spades"), PlayingCard.new("4", "Spades"), PlayingCard.new("5", "Spades"), PlayingCard.new("6", "Hearts")]
+        hand1 = [PlayingCard.new("10", "Spades"), PlayingCard.new("10", "Hearts") ]
+        hand2 = [PlayingCard.new("9", "Spades"), PlayingCard.new("9", "Hearts") ]
+        expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(1)
+        expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(2)
+      end
     end
 
     context 'tie breaks' do
@@ -222,13 +244,6 @@ RSpec.describe HandAnalyzer do
       expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(2)
       end
 
-=begin
-"Js 3s Ks 6s Qs"
-"8d 6d 3d Kd 2d"
-"our result = 0"
-"their result = 1"
-=end
-
       it 'properly tie-breaks two flushes, 2nd test' do # Js 3s Ks 6s Qs vs 8d 6d 3d Kd 2d
       board = []
       hand1 = [PlayingCard.new("J", "Spades"), PlayingCard.new("3", "Spades"), PlayingCard.new("K", "Spades"), PlayingCard.new("6", "Spades"), PlayingCard.new("Q", "Spades")]
@@ -236,13 +251,6 @@ RSpec.describe HandAnalyzer do
       expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(1)
       expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(2)
       end
-
-=begin
-"2d Ad 3d 9d Qd"
-"As 9s Qs 6s Ts"
-"our result = 0"
-"their result = 2"
-=end
 
       it 'properly tie-breaks two flushes, 3rd test' do # Js 3s Ks 6s Qs vs 8d 6d 3d Kd 2d
       board = []
@@ -315,13 +323,6 @@ RSpec.describe HandAnalyzer do
       expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(0)
       expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(0)
       end
-
-=begin
-"4s Td 4c 2s 3c"
-"9c 4c 4d 2c Th" !!! 4c twice
-"our result = 0"
-"their result = 2"      
-=end
 
       it 'properly tie-breaks one pair, 4th test (two kickers)' do # 4s Td 4c 2s 3c" vs "9c 4c 4d 2c Th !!! 4c twice
       board = []
@@ -416,5 +417,21 @@ RSpec.describe HandAnalyzer do
         expect(HandAnalyzer.send(:is_straight?, rank_array)).to eq([true, 5])
       end
     end
+
+    context '#straight_flush? method' do
+      it 'properly recognises a straight flush, 1st test' do
+        cards = [PlayingCard.new("2", "Diamonds"), PlayingCard.new("3", "Diamonds"), PlayingCard.new("4", "Diamonds"), PlayingCard.new("5", "Diamonds"), PlayingCard.new("6", "Diamonds"), PlayingCard.new("A", "Hearts"), PlayingCard.new("K", "Spades")]
+        #hand = [PlayingCard.new("5", "Diamonds"), PlayingCard.new("6", "Diamonds") ]
+        expect(HandAnalyzer.send(:is_straight_flush?, cards)).to eq([true, 4])
+
+      end
+      it 'properly recognises a straight flush, 2nd test' do
+        #cards --> ["2 of Spades", "3 of Spades", "4 of Spades", "5 of Spades", "6 of Hearts", "9 of Spades", "9 of Hearts"]
+        cards = [PlayingCard.new("2", "Spades"), PlayingCard.new("3", "Spades"), PlayingCard.new("4", "Spades"), PlayingCard.new("5", "Spades"), PlayingCard.new("6", "Hearts"), PlayingCard.new("9", "Spades"), PlayingCard.new("9", "Hearts")]
+        expect(HandAnalyzer.send(:is_straight_flush?, cards)).to eq([false, nil])
+      end
+
+    end
+
   end
 end

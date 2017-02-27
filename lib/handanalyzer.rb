@@ -9,12 +9,14 @@ class HandAnalyzer
     n = 0
     ties = 0
     cd.deck_of_cards.combination(5).each do |comb|
-      #b = Board.new(comb)
+      if i % 10000 == 0
+        puts "i=#{i}"
+      end
       i += 1
       win = winner(comb, hand1, hand2)
       if win == 1
         n += 1
-      elsif win == nil
+      elsif win == 0
         ties += 1
       end
     end
@@ -61,7 +63,7 @@ class HandAnalyzer
 
     h_rank = [0,0,0,0,0,0,0,0,0,0,0,0,0]
     h_suit = [0,0,0,0]
-    high_card_array = []
+    #high_card_array = []
 
     cards.each do |c| 
       h_rank[c.rank_no] += 1
@@ -72,12 +74,16 @@ class HandAnalyzer
     is_flush = h_suit.max >= 5
 
     if is_flush and is_straight
-      straight_flush, high_card = straight_flush?(cards) 
+      straight_flush, high_card = is_straight_flush?(cards) 
+      #p 'straight_flush test: ' + straight_flush.to_s, high_card
       return :straight_flush, [high_card] if straight_flush
     end
 
     if h_rank.include?(4)
-      return :four_of_a_kind, [h_rank.index(4), h_rank.index(1)]
+      # need to get highest kicker
+      high_card = hand_rank_evaluator(h_rank, Proc.new {|val| val != 0 and val != 4}).last
+      return :four_of_a_kind, [h_rank.index(4), high_card]
+      #return :four_of_a_kind, [h_rank.index(4), h_rank.index(1)] # this got the wrong kicker in one case
     elsif h_rank.include?(3) and h_rank.include?(2)
       return :fullhouse, [h_rank.index(3), h_rank.index(2)]
     elsif is_flush
@@ -88,26 +94,11 @@ class HandAnalyzer
     elsif h_rank.max == 3
       return :three_of_a_kind, [h_rank.index(3), 12-h_rank.reverse.index(1), h_rank.index(1)]
     elsif h_rank.max == 1 # !!! This overlaps the else clause in this if statement below ('return :high_card, h_rank.sort')
-=begin
-      h_rank.each_index do |i|
-        if h_rank[i] != 0
-        high_card_array << i
-        end
-      end
-=end
       return :high_card, hand_rank_evaluator(h_rank, Proc.new {|val| val != 0}).pop(5).reverse
     elsif h_rank.count(2) == 2
       return :two_pair, [12-h_rank.reverse.index(2), h_rank.index(2), 12-h_rank.reverse.index(1)]
     elsif h_rank.include?(2)
-=begin
-      h_rank.each_index do |i|
-        if h_rank[i] == 1
-        high_card_array << i
-        end
-      end
-=end
       return :pair, hand_rank_evaluator(h_rank, Proc.new {|val| val == 1}).pop(3).reverse.unshift(h_rank.index(2))
-      #return :high_card, hand_rank_evaluator(h_rank, Proc.new {|val| val != 0}).pop(5).reverse
     else # this never gets executed!?
       return :high_card, h_rank.sort
     end      
@@ -115,7 +106,7 @@ class HandAnalyzer
 
 private
 
-  def self.hand_rank_evaluator(h_rank, proc) # proc returns true or false, e.g. proc = Proc.new {|val| val != 0}
+  def self.hand_rank_evaluator(h_rank, proc) # proc should return true or false, e.g. proc = Proc.new {|val| val != 0}
     high_card_array = Array.new
     h_rank.each_index do |i|
       if proc.call(h_rank[i])
@@ -125,25 +116,17 @@ private
     return high_card_array
   end
 
-  def self.straight_flush?(cards)
+  def self.is_straight_flush?(cards)
     # check 21 combinations = 7 taken 5 times
     h = [[0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0]]
     cards.each do |c| 
       h[c.suit_no][c.rank_no]  += 1
     end
-    h.each do |x|
-      straight, high_card = is_straight?(x)
+    h.each do |rank_array|
+      straight, high_card = is_straight?(rank_array)
       return straight, high_card if straight
     end
-  end
-
-  def self.flush_high_card(cards, suit_no)
-    # check 21 combinations = 7 taken 5 times
-    h = [[0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0]]
-    cards.each do |c| 
-      h[c.suit_no][c.rank_no]  += 1
-    end
-    return 12-h[suit_no].reverse.index(1)
+    return false, nil
   end
 
   def self.is_straight?(rank_array) # ACE = 1 or 14!!!
