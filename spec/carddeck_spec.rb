@@ -91,16 +91,16 @@ RSpec.describe CardDeck do
       expect(@cd.find_card(specific_card)).to equal(nil)
     end
 
-    it 'can deal a pair of 10s' do
-      sc1 = PlayingCard.new("10", "Hearts")
-      sc2 = PlayingCard.new("10", "Spades")
+    it 'can deal a pair of Ts' do
+      sc1 = PlayingCard.new("T", "Hearts")
+      sc2 = PlayingCard.new("T", "Spades")
       @cd.deal_specific(sc1, sc2)
       expect(@cd.count_cards).to eql(50)
     end
 
     it 'can deal 5 board cards and two specific pairs' do 
-      sc1 = PlayingCard.new("10", "Hearts")
-      sc2 = PlayingCard.new("10", "Spades")
+      sc1 = PlayingCard.new("T", "Hearts")
+      sc2 = PlayingCard.new("T", "Spades")
       sc3 = PlayingCard.new("A", "Clubs")
       sc4 = PlayingCard.new("A", "Diamonds")
       @cd.deal_specific(sc1, sc2, sc3, sc4)

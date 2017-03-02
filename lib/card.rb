@@ -2,8 +2,9 @@ class PlayingCard
   include Comparable
   attr_reader :rank_no, :suit_no
 
-  RANKS = %w{2 3 4 5 6 7 8 9 10 J Q K A}
+  RANKS = %w{2 3 4 5 6 7 8 9 T J Q K A}
   SUITS = %w{Spades Hearts Diamonds Clubs}
+  SUITS_SHORT = %w{S H D C}
 
   def initialize(rank, suit)
     if RANKS.include?(rank) and SUITS.include?(suit)
@@ -19,7 +20,7 @@ class PlayingCard
   end
 
   def to_s
-    self.rank + ' of ' + self.suit
+    self.rank + self.suit_short
   end
 
   def rank
@@ -28,6 +29,10 @@ class PlayingCard
 
   def suit
     SUITS[@suit_no]
+  end
+
+  def suit_short
+    SUITS_SHORT[@suit_no]
   end
 
   def <=>(other_card) # do we need this???

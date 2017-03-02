@@ -5,18 +5,21 @@ class HandAnalyzer
   def self.show_odds(board, hand1, hand2, game='Texas Holdem')
     cd = CardDeck.new
     cd.deal_specific(hand1[0], hand1[1], hand2[0], hand2[1])
-    i = 0
+    #i = 0
+    i = 1712304
     n = 0
     ties = 0
     cd.deck_of_cards.combination(5).each do |comb|
+=begin
       if i % 10000 == 0
         puts "i=#{i}"
       end
       i += 1
-      win = winner(comb, hand1, hand2)
-      if win == 1
+=end
+      result = winner(comb, hand1, hand2)
+      if result == 1
         n += 1
-      elsif win == 0
+      elsif result == 0
         ties += 1
       end
     end
@@ -79,15 +82,27 @@ class HandAnalyzer
       return :straight_flush, [high_card] if straight_flush
     end
 
+    is_fullhouse, fullhouse_high_card_array = is_fullhouse?(h_rank)
+
     if h_rank.include?(4)
       # need to get highest kicker
       high_card = hand_rank_evaluator(h_rank, Proc.new {|val| val != 0 and val != 4}).last
       return :four_of_a_kind, [h_rank.index(4), high_card]
       #return :four_of_a_kind, [h_rank.index(4), h_rank.index(1)] # this got the wrong kicker in one case
-    elsif h_rank.include?(3) and h_rank.include?(2)
-      return :fullhouse, [h_rank.index(3), h_rank.index(2)]
+    #elsif h_rank.include?(3) and h_rank.include?(2) # what if 2x 3 of a kind???!!! or 1x 3 of a kind + 2 pairs!!
+    elsif is_fullhouse
+      #return :fullhouse, [h_rank.index(3), h_rank.index(2)]
+      return :fullhouse, fullhouse_high_card_array
     elsif is_flush
       #high_card = flush_high_card(cards, h_suit.index(h_suit.max))
+      flush_suit_index = h_suit.each_index.select {|i| h_suit[i] >= 5}[0] # returns array, need 1st element
+      # calculate new h_rank only for cards with flush suit
+      h_rank = [0,0,0,0,0,0,0,0,0,0,0,0,0]
+      cards.each do |c| 
+        h_rank[c.rank_no] += 1 if c.suit_no == flush_suit_index
+        #h_suit[c.suit_no] += 1
+      end
+
       return :flush, hand_rank_evaluator(h_rank, Proc.new {|val| val != 0}).pop(5).reverse
     elsif is_straight
       return :straight, [s_high_card]
@@ -95,8 +110,12 @@ class HandAnalyzer
       return :three_of_a_kind, [h_rank.index(3), 12-h_rank.reverse.index(1), h_rank.index(1)]
     elsif h_rank.max == 1 # !!! This overlaps the else clause in this if statement below ('return :high_card, h_rank.sort')
       return :high_card, hand_rank_evaluator(h_rank, Proc.new {|val| val != 0}).pop(5).reverse
-    elsif h_rank.count(2) == 2
-      return :two_pair, [12-h_rank.reverse.index(2), h_rank.index(2), 12-h_rank.reverse.index(1)]
+    elsif h_rank.count(2) >= 2 # what if 7-card hand has 3 pairs? e.g. "2s 3s 4s 2h 3h Ts Th"
+      #return :two_pair, [12-h_rank.reverse.index(2), h_rank.index(2), 12-h_rank.reverse.index(1)]
+      high_card_array = hand_rank_evaluator(h_rank, Proc.new {|val| val == 2}).pop(2).reverse # get two highest pairs
+      high_card_array.each {|i| h_rank[i] = 0} # nuke the highest pairs in h_rank array
+      high_card_array.push(high_card = hand_rank_evaluator(h_rank, Proc.new {|val| val != 0}).last) # add highest remaining card to high_card_array
+      return :two_pair, high_card_array
     elsif h_rank.include?(2)
       return :pair, hand_rank_evaluator(h_rank, Proc.new {|val| val == 1}).pop(3).reverse.unshift(h_rank.index(2))
     else # this never gets executed!?
@@ -151,6 +170,21 @@ private
       return true, 3
     else
       return false, nil # otherwise return negative result = [false, nil]
+    end
+  end
+
+  def self.is_fullhouse?(rank_array)
+    # 1st eliminate hands that don't have any 3 of a kind
+    return false, nil unless rank_array.include?(3)
+    # now need to check for rare case of two 3 of a kinds
+    three_of_a_kind_array = hand_rank_evaluator(rank_array, Proc.new {|val| val == 3})
+    if three_of_a_kind_array.size == 2
+      return true, three_of_a_kind_array.reverse
+    elsif rank_array.include?(2) # normal case of fullhouse but could possibly have 2 pairs
+
+      return true, [three_of_a_kind_array.last, hand_rank_evaluator(rank_array, Proc.new {|val| val == 2}).last]
+    else
+      return false, nil
     end
   end
 
