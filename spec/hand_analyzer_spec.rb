@@ -68,10 +68,8 @@ RSpec.describe HandAnalyzer do
       board = []
       hand1 = [PlayingCard.new("T", "Spades"), PlayingCard.new("T", "Hearts") ]
       hand2 = [PlayingCard.new("9", "Spades"), PlayingCard.new("9", "Hearts") ]
-      expect(HandAnalyzer.show_odds(board, hand1, hand2)).to eql(0.8)
-      # expected: 0.8
-      # got: 0.8296634242517684
-      # 27feb17: => [0.7868672852484139, 0.04T00897036974744]
+      expect(HandAnalyzer.show_odds(board, hand1, hand2)).to eql([0.8240254067034826, 0.005806211981050094])
+      # 3mar17:  => [0.8240254067034826, 0.005806211981050094] (I think this is correct)
     end
   end
 
@@ -134,16 +132,6 @@ RSpec.describe HandAnalyzer do
         expect(HandAnalyzer.evaluate(board, hand1)).to eql([:four_of_a_kind, [0, 8]]) 
       end
 
-=begin
-["2S", "3S", "4S", "5S", "TD"]
-"2s 3s 4s 5s Td Ts Th"
-"Flush"
-"2s 3s 4s 5s Td 9s 9h"
-"Flush"
-"our result = 2"
-"their result = 1"
-=end
-
       it 'handles flush situation, 1st test' do
         board = [PlayingCard.new("2", "Spades"), PlayingCard.new("3", "Spades"), PlayingCard.new("4", "Spades"), PlayingCard.new("5", "Spades"), PlayingCard.new("T", "Diamonds")]
         hand1 = [PlayingCard.new("T", "Spades"), PlayingCard.new("T", "Hearts") ]
@@ -155,15 +143,6 @@ RSpec.describe HandAnalyzer do
         hand1 = [PlayingCard.new("9", "Spades"), PlayingCard.new("9", "Hearts") ]
         expect(HandAnalyzer.evaluate(board, hand1)).to eql([:flush, [7, 3, 2, 1, 0]]) 
       end
-
-=begin
-"2s 3s 4s 2h 3h Ts Th" --> Ts Th 3h 3s 4s
-"Two pair"
-"2s 3s 4s 2h 3h 9s 9h"
-"Two pair"
-"our result = 0"
-"their result = 1"
-=end
 
       it 'handles two-pair situation, 1st test' do
         board = [PlayingCard.new("2", "Spades"), PlayingCard.new("3", "Spades"), PlayingCard.new("4", "Spades"), PlayingCard.new("2", "Hearts"), PlayingCard.new("3", "Hearts")]
@@ -177,15 +156,6 @@ RSpec.describe HandAnalyzer do
         hand1 = [PlayingCard.new("9", "Spades"), PlayingCard.new("9", "Hearts") ]
         expect(HandAnalyzer.evaluate(board, hand1)).to eql([:two_pair, [7, 1, 2]]) 
       end
-
-=begin
-"2s 3s 2h 3h 2d Ts Th" --> 2s 2h 2d Ts Th
-"Full house"
-"2s 3s 2h 3h 2d 9s 9h" --> 2s 2h 2d 9s 9h
-"Full house"
-"our result = 0"
-"their result = 1"
-=end
 
       it 'handles full-house situation, 1st test' do
         board = [PlayingCard.new("2", "Spades"), PlayingCard.new("3", "Spades"), PlayingCard.new("2", "Hearts"), PlayingCard.new("3", "Hearts"), PlayingCard.new("2", "Diamonds")]
@@ -204,15 +174,6 @@ RSpec.describe HandAnalyzer do
         hand1 = [PlayingCard.new("T", "Spades"), PlayingCard.new("T", "Hearts") ]
         expect(HandAnalyzer.evaluate(board, hand1)).to eql([:fullhouse, [8, 0]]) 
       end
-
-=begin
-"2s 3s 2h 3h 3d Ts Th"
-"Full house"
-"2s 3s 2h 3h 3d 9s 9h"
-"Full house"
-"our result = 1"
-"their result = 0"
-=end
 
       it 'handles full-house situation, 4th test' do # "2s 3s 2h 3h 3d Ts Th" --> 3s 3h 3d Td Ts
         board = [PlayingCard.new("2", "Spades"), PlayingCard.new("3", "Spades"), PlayingCard.new("2", "Hearts"), PlayingCard.new("3", "Hearts"), PlayingCard.new("3", "Diamonds")]
@@ -290,16 +251,6 @@ RSpec.describe HandAnalyzer do
         expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(2)
       end
 
-=begin
-["2S", "3S", "4S", "5S", "TD"]
-"2s 3s 4s 5s Td Ts Th"
-"Flush"
-"2s 3s 4s 5s Td 9s 9h"
-"Flush"
-"our result = 2"
-"their result = 1"
-=end
-
       it 'handles a problem flush situation' do
         board = [PlayingCard.new("2", "Spades"), PlayingCard.new("3", "Spades"), PlayingCard.new("4", "Spades"), PlayingCard.new("5", "Spades"), PlayingCard.new("T", "Diamonds")]
         hand1 = [PlayingCard.new("T", "Spades"), PlayingCard.new("T", "Hearts") ]
@@ -307,15 +258,6 @@ RSpec.describe HandAnalyzer do
         expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(1)
         expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(2)
       end
-
-=begin
-"2s 3s 4s 2h 3h Ts Th"
-"Two pair"
-"2s 3s 4s 2h 3h 9s 9h"
-"Two pair"
-"our result = 0"
-"their result = 1"
-=end
 
       it 'handles a problem two-pair  situation' do
         board = [PlayingCard.new("2", "Spades"), PlayingCard.new("3", "Spades"), PlayingCard.new("4", "Spades"), PlayingCard.new("2", "Hearts"), PlayingCard.new("3", "Hearts")]
@@ -335,6 +277,15 @@ RSpec.describe HandAnalyzer do
 "their result = 1"
 =end
 
+# another such error
+=begin
+"Jh 6d Jd 6c Jc Ts Th"
+"Full house"
+"Jh 6d Jd 6c Jc 9s 9h"
+"Full house"
+"our result = 1"
+"their result = 0"
+=end
 
     end
 

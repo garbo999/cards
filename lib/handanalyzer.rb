@@ -5,17 +5,17 @@ class HandAnalyzer
   def self.show_odds(board, hand1, hand2, game='Texas Holdem')
     cd = CardDeck.new
     cd.deal_specific(hand1[0], hand1[1], hand2[0], hand2[1])
-    #i = 0
-    i = 1712304
+    i = 0
+    #i = 1712304
     n = 0
     ties = 0
     cd.deck_of_cards.combination(5).each do |comb|
-=begin
+
       if i % 10000 == 0
         puts "i=#{i}"
       end
       i += 1
-=end
+
       result = winner(comb, hand1, hand2)
       if result == 1
         n += 1
