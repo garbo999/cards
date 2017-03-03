@@ -73,7 +73,7 @@ RSpec.describe HandAnalyzer do
       # corresponds to result from this site: http://www.cardplayer.com/poker-tools/odds-calculator/texas-holdem
     end
 
-    it 'shows some odds for higher vs lower pair, 2nd test' do 
+    xit 'shows some odds for higher vs lower pair, 2nd test' do 
       board = []
       hand1 = [PlayingCard.new("A", "Spades"), PlayingCard.new("K", "Hearts") ]
       hand2 = [PlayingCard.new("9", "Spades"), PlayingCard.new("9", "Hearts") ]
@@ -276,26 +276,6 @@ RSpec.describe HandAnalyzer do
         expect(HandAnalyzer.winner(board, hand1, hand2)).to eql(1)
         expect(HandAnalyzer.winner(board, hand2, hand1)).to eql(2)
       end
-
-# error I found in ruby-poker gem
-=begin
-"Ah Kd Ad Kc Ac Ts Th"
-"Full house"
-"Ah Kd Ad Kc Ac 9s 9h"
-"Full house"
-"our result = 0"
-"their result = 1"
-=end
-
-# another such error
-=begin
-"Jh 6d Jd 6c Jc Ts Th"
-"Full house"
-"Jh 6d Jd 6c Jc 9s 9h"
-"Full house"
-"our result = 1"
-"their result = 0"
-=end
 
     end
 
