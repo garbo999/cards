@@ -70,6 +70,16 @@ RSpec.describe HandAnalyzer do
       hand2 = [PlayingCard.new("9", "Spades"), PlayingCard.new("9", "Hearts") ]
       expect(HandAnalyzer.show_odds(board, hand1, hand2)).to eql([0.8240254067034826, 0.005806211981050094])
       # 3mar17:  => [0.8240254067034826, 0.005806211981050094] (I think this is correct)
+      # corresponds to result from this site: http://www.cardplayer.com/poker-tools/odds-calculator/texas-holdem
+    end
+
+    it 'shows some odds for higher vs lower pair, 2nd test' do 
+      board = []
+      hand1 = [PlayingCard.new("A", "Spades"), PlayingCard.new("K", "Hearts") ]
+      hand2 = [PlayingCard.new("9", "Spades"), PlayingCard.new("9", "Hearts") ]
+      expect(HandAnalyzer.show_odds(board, hand1, hand2)).to eql([0.44903416683018904, 0.004713532176529402])
+      # 3mar17:  => [0.44903416683018904, 0.004713532176529402] (I think this is correct)
+      # corresponds to result from this site: http://www.cardplayer.com/poker-tools/odds-calculator/texas-holdem
     end
   end
 
